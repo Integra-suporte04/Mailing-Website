@@ -1,0 +1,264 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+html{
+    overflow-y:hidden !important;
+}
+body {
+    overflow-y: hidden !important;
+}
+main {
+    overflow-y: hidden !important;
+}
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a {
+  color: #0077cc;
+}
+
+.navbar {
+    background-color: #607D8B;
+    height: 8vh;
+    z-index:10;
+    border: none !important;
+}
+.navbar-brand{
+    margin-left:10px;
+}
+
+.navbar-icons {
+    display: flex;
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+    .navbar-icons i {
+        font-size: 24px;
+        margin-right: 15px;
+        cursor:pointer;
+    }
+
+.notification {
+    position: relative;
+}
+
+    .notification .badge {
+        position: absolute;
+        top: -10px;
+        right: 1vw;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  color:white;
+  background-color:black;
+  height: 5vh;
+  display:flex;
+  align-items:center;
+}
+#sidebar{
+    position:fixed;
+    left:-300px;
+    bottom:5%;
+    height:87%;
+    width:300px;
+    background-color:white;
+    color:darkgray;
+    transition:left 0.3s;
+    padding:0;
+}
+#sidebarToggle {
+    font-size: 24px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0);
+    border: none;
+}
+#sidebar.open {
+    left: 0; /* Move a barra de navegação lateral para a posição visível */
+}
+.sidebar-info {
+    width: 100%;
+    height: 20%;
+    padding: 15px;
+    background: repeating-linear-gradient(0, rgba(152, 152, 152, 0.14) 0px, rgba(152, 152, 152, 0.14) 9px,rgba(243, 243, 243, 0.14) 9px, rgba(243, 243, 243, 0.14) 18px),repeating-linear-gradient(90deg, rgba(163, 163, 163, 0.11) 0px, rgba(163, 163, 163, 0.11) 10px,rgba(55, 55, 55, 0.11) 10px, rgba(55, 55, 55, 0.11) 20px),linear-gradient(90deg, hsl(0, 0%, 0%),hsl(0, 0%, 52%)) !important
+}
+.profile-data {
+    display: flex;
+    width: 100%;
+    margin-top: 18.5%;
+    color: white;
+}
+
+.info {
+    flex:5;
+    width: 100%;
+    height:auto;
+}
+.info h6{
+    margin:0;
+    padding:0;
+}
+.info p{
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+}
+.profile-button {
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+
+.user-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-large {
+    width: 50px; /* Largura da imagem grande */
+    height: 50px; /* Altura da imagem grande */
+    position: relative;
+}
+    .user-large img{
+        width:100%;
+        height:auto;
+        border-radius:50%;
+    }
+
+
+.user-small {
+    width: 20px; /* Largura da imagem pequena */
+    height: 20px; /* Altura da imagem pequena */
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+}
+    .user-small img {
+        width: 100%; /* Garante que a imagem pequena se ajuste à div */
+        height: auto; /* Mantém a proporção original */
+        max-width: 100%; /* Limita o tamanho máximo da imagem pequena */
+        object-fit: cover;
+        border-radius:50%;
+    }
+
+
+.sidebar-menu {
+    height: 80%;
+    width: 100%;
+    overflow-y:auto;
+}
+.sidebar-title{
+    background-color:lightgray;
+    color:black;
+    font-size: 13px;
+    height: 4%;
+    display:flex;
+    align-items:center;
+    padding-left:17px;
+}
+
+.menu-group {
+    display: block;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.toggle-button {
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.option-button {
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: block;
+}
+
+.options {
+    display: none;
+    padding: 10px;
+}
+
+.toggle-button::after {
+    content: "+";
+}
+
+.expanded .toggle-button::after {
+    content: "-";
+}
+
+.expanded .options {
+    display: block;
+}
+
+
+
+
+#mainContent {
+    width: 75%;
+    height: 87vh;
+    position: absolute;
+    top: 8vh;
+    right: 0;
+    overflow-y: hidden;
+}
+#mainContent.expanded{
+    width:100%;
+}

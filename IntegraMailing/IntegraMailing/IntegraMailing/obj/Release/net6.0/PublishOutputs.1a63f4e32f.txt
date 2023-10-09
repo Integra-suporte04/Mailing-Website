@@ -1,0 +1,14 @@
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.exe
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\appsettings.json
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.deps.json
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.runtimeconfig.json
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.pdb
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\MySqlConnector.dll
+C:\Users\Usuário\Desktop\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Pomelo.EntityFrameworkCore.MySql.dll

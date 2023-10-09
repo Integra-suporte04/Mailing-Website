@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Integra Mailing</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/IntegraMailing.styles.css" asp-append-version="true" />
+
+    <!--Importação de estilos personalizados-->
+    <link href="@Url.Content("~/css/ListaStyle.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/PerfilStyle.css")" rel="stylesheet" type="text/css" />
+    @RenderSection("Styles", false)
+</head>
+<body>
+    <header>
+        <!--Barra de navegação superior-->
+        <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable-sm border-bottom box-shadow mb-3">
+            <div>
+                <button id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Validação de Mailing</a>
+            </div>
+
+            <div class="navbar-icons">
+                <i class="fas fa-search"></i> <!-- Ícone de lupa -->
+                <i class="fas fa-cog"></i> <!-- Ícone de engrenagem -->
+                <div class="notification">
+                    <i class="fas fa-envelope"></i> <!-- Ícone de email -->
+                    <span class="badge">0</span> <!-- Número de notificações -->
+                </div>
+                <div class="notification">
+                    <i class="fas fa-bell"></i> <!-- Ícone de sino -->
+                    <span class="badge">0</span> <!-- Número de notificações -->
+                </div>
+                <i class="fas fa-sign-out-alt"></i> <!-- Ícone de logout -->
+            </div>
+
+
+
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main">
+            <!-- Barra de navegação lateral -->
+            <div class="container-fluid open" id="sidebar">
+                <div class="container sidebar-info">
+
+                    <div class="user-container">
+                        <div class="user-large">
+                            <img src="/assets/userIcon.png" alt="Imagem de Usuário" class="img-circle" /> <!--Imagem do usuário-->
+                        </div>
+                        <div class="user-small">
+                            <img src="/assets/enterprise.png" alt="Imagem de Empresa" /> <!--Imagem da empresa-->
+                        </div>
+                    </div>
+
+                    <div class="profile-data">
+                        <div class="info">
+                            <h6>Administrador (Empresa)</h6> <!-- Nome do usuário e empresa -->
+                            <p>admin@gmail.com</p> <!-- Email do usuário -->
+                        </div>
+                        <button class="btn profile-button"><i class="fa-solid fa-chevron-down" style="color:white;"></i></button> <!-- Botão para expandir opções -->
+                    </div>
+
+                </div>
+
+                <!-- Grupos e opções de cada grupo no menu lateral -->
+
+                <div class="menu-group">
+                    <button class="toggle-button">&#x1F4DE; Campanhas</button>
+                    <div class="options">
+                        <button class="option-button">
+                            <a class="text-decoration-none text-black text-lg-start" asp-area="" asp-controller="Home" asp-action="Lista"><i class="fas fa-arrow-right"></i> Listas</a>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <button class="toggle-button">&#x2714; Resultados</button>
+                    <div class="options">
+                        <button class="option-button">Status Final</button>
+                        <button class="option-button">Analítico</button>
+                    </div>
+                </div>
+
+                
+            </div>
+                <div id="mainContent" class="">
+                @RenderBody() <!-- Renderização dinâmica de páginas -->
+                </div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Integra Sistema
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/cfec620395.js" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

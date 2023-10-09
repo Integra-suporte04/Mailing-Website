@@ -1,0 +1,130 @@
+﻿
+/* Estilo para a coluna-titulos */
+.coluna-titulos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    padding: 10px 50% 10px 10px;
+}
+
+/* Estilo para os títulos das colunas */
+.titulo-coluna {
+    font-weight: bold;
+}
+
+.coluna {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px; /* Espaçamento entre as colunas de dados */
+    padding: 10px 3% 10px 3%;
+}
+
+/* Estilo para os botões */
+.btn-carregar-csv {
+    background-color: #fff; /* Fundo branco */
+    color: #333; /* Cor do texto */
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease; /* Transição de sombra */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra preta */
+}
+
+.btn-deletar {
+    background: none;
+    border: none;
+}
+
+.btn-carregar-csv:hover {
+    background-color: #f0f0f0; /* Cor de fundo quando o mouse está sobre o botão */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada no hover */
+}
+
+
+/* Estilos para informações de paginação */
+.pagina-info {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Estilos para botões de navegação de página */
+.paginacao {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-pagina {
+    background-color: #fff; /* Fundo branco */
+    color: #333; /* Cor do texto */
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease; /* Transição de sombra */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra preta */
+}
+
+    .btn-pagina:hover {
+        background-color: #f0f0f0; /* Cor de fundo quando o mouse está sobre o botão */
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Sombra mais pronunciada no hover */
+    }
+
+.pagina-atual {
+    background-color: #333;
+}
+
+.custom-file-upload {
+    padding: 6px 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    display: inline-block;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#btnNew {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.extra-content {
+    display: none;
+}
+.btn-pagina-selecionada {
+    background-color: #007BFF; /* ou qualquer outra cor de sua escolha */
+    color: white;
+}
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.progress-bar {
+    background-size: 200% 200%;
+    background-image: linear-gradient(45deg, #3498db, #85c1e9, #2980b9, #85c1e9);
+    animation: gradient-animation 5s ease infinite;
+}
+
+
+
+
+
+

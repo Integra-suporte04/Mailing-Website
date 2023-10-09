@@ -1,0 +1,8 @@
+﻿.btn-config{
+    width:100%;
+    background-color:aqua;
+}
+.btn-config i{
+    cursor:pointer;
+    color:goldenrod;
+}
