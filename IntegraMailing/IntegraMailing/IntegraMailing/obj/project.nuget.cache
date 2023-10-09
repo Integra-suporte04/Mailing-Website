@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lSEHVX7hFTVXTwCId5craamZ0EvWaq5VBED9/b7jhejhtzegkEW5XV3YbBnlPObEA9QXj6Z+wNY/m3l+wZaWmQ==",
+  "dgSpecHash": "z9iMTy5ZN5BXBKcpSZqWogIFsEJfaii9SwoMGpOt2yjWNuyYs8nA1lekDACa/WfypYLwqgTRkkQINwd7akuabA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Usuário\\Desktop\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
+  "projectFilePath": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Usuário\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.0\\microsoft.aspnetcore.cryptography.internal.6.0.0.nupkg.sha512",
     "C:\\Users\\Usuário\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\6.0.0\\microsoft.aspnetcore.cryptography.keyderivation.6.0.0.nupkg.sha512",

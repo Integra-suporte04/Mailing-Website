@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Identity;
-//using IntegraMailing.Data;
+using IntegraMailing.Data;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +11,18 @@ builder.Services.AddControllersWithViews();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>() // Configura o Identity
-   // .AddEntityFrameworkStores<ApplicationDbContext>() // Usa o DbContext para o Identity
- //   .AddDefaultTokenProviders(); // Adiciona provedores de token padrão
+
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+connectionString = "Server=192.168.1.29;Database=test;User=root;Password=Hagley@2014;";
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString,
+        new MySqlServerVersion(new Version(5, 5, 68)))
+    .EnableSensitiveDataLogging()
+    .LogTo(Console.WriteLine,LogLevel.Information));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages(); // Adiciona suporte para Razor Pages (ou AddControllersWithViews para MVC)
 builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -51,6 +61,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=SignUp}/{id?}");
+    pattern: "{controller=Account}/{action=SignIn}/{id?}");
 
 app.Run();

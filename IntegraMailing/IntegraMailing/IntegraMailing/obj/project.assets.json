@@ -1128,11 +1128,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Usuário\\Desktop\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
+      "projectUniqueName": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
       "projectName": "IntegraMailing",
-      "projectPath": "C:\\Users\\Usuário\\Desktop\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
+      "projectPath": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
       "packagesPath": "C:\\Users\\Usuário\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Usuário\\Desktop\\IntegraMailing\\IntegraMailing\\IntegraMailing\\obj\\",
+      "outputPath": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Usuário\\AppData\\Roaming\\NuGet\\NuGet.Config",
