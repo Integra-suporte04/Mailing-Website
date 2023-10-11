@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var accountType = ViewData["AccountType"] as string;
+    var userEmail = ViewData["UserEmail"] as string;
+    var userName = ViewData["UserName"] as string;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -37,9 +42,6 @@
                 </div>
                 <i class="fas fa-sign-out-alt"></i> <!-- Ícone de logout -->
             </div>
-
-
-
         </nav>
     </header>
 
@@ -49,19 +51,24 @@
             <div class="container-fluid open" id="sidebar">
                 <div class="container sidebar-info">
 
+ 
                     <div class="user-container">
                         <div class="user-large">
                             <img src="/assets/userIcon.png" alt="Imagem de Usuário" class="img-circle" /> <!--Imagem do usuário-->
                         </div>
-                        <div class="user-small">
-                            <img src="/assets/enterprise.png" alt="Imagem de Empresa" /> <!--Imagem da empresa-->
-                        </div>
+                        
+                            @if (accountType == "Empregado")
+                            {
+                                <div class="user-small">
+                                    <img src="/assets/enterprise.png" alt="Imagem de Empresa" /> <!--Imagem da empresa-->
+                                </div>
+                            }                                                     
                     </div>
 
                     <div class="profile-data">
                         <div class="info">
-                            <h6>Administrador (Empresa)</h6> <!-- Nome do usuário e empresa -->
-                            <p>admin@gmail.com</p> <!-- Email do usuário -->
+                            <h6>@userName (@accountType)</h6> <!-- Nome do usuário e empresa -->
+                            <p>@userEmail</p> <!-- Email do usuário -->
                         </div>
                         <button class="btn profile-button"><i class="fa-solid fa-chevron-down" style="color:white;"></i></button> <!-- Botão para expandir opções -->
                     </div>

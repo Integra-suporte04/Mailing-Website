@@ -1,0 +1,80 @@
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+html[b-ksrqczyrcf]{
+    overflow-y:hidden !important;
+}
+body[b-ksrqczyrcf] {
+    overflow-y: hidden !important;
+}
+main[b-ksrqczyrcf] {
+    overflow-y: hidden !important;
+}
+a.navbar-brand[b-ksrqczyrcf] {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a[b-ksrqczyrcf] {
+  color: #0077cc;
+}
+
+.navbar[b-ksrqczyrcf] {
+    background-color: #607D8B;
+    height: 8vh;
+    z-index:10;
+    border: none !important;
+}
+.navbar-brand[b-ksrqczyrcf]{
+    margin-left:10px;
+}
+
+.navbar-icons[b-ksrqczyrcf] {
+    display: flex;
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+    .navbar-icons i[b-ksrqczyrcf] {
+        font-size: 24px;
+        margin-right: 15px;
+        cursor:pointer;
+    }
+
+.notification[b-ksrqczyrcf] {
+    position: relative;
+}
+
+    .notification .badge[b-ksrqczyrcf] {
+        position: absolute;
+        top: -10px;
+        right: 1vw;
+        background-color: black;
+        color: white;
+        border-radius: 50%;
+        padding: 5px 8px;
+        font-size: 12px;
+    }
+
+
+.btn-primary[b-ksrqczyrcf] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active[b-ksrqczyrcf], .nav-pills .show > .nav-link[b-ksrqczyrcf] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+.main-div[b-ksrqczyrcf] {
+    padding: 1%;
+    width: 100%;
+    height: auto;
+    max-height: contain;
+    background-color: white;
+    border: 1px dotted black;
+}

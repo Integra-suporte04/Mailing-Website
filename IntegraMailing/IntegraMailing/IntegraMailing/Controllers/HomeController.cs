@@ -1,4 +1,6 @@
-﻿using IntegraMailing.Models;
+﻿using IntegraMailing.Data;
+using IntegraMailing.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,14 +9,35 @@ namespace IntegraMailing.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                ViewData["AccountType"] = user.AccountType;
+                ViewData["UserEmail"] = user.Email;
+                ViewData["UserName"] = user.UserName;
+
+                Debug.WriteLine("User is NOT null");
+                _logger.LogInformation("a");
+
+            }
+            else
+            {
+
+                Debug.WriteLine("User is null");
+                _logger.LogInformation("b");
+
+                // ... o restante do seu código ...
+
+            }
             return View();
         }
 
