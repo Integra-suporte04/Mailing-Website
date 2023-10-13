@@ -18,6 +18,20 @@ a.navbar-brand {
 a {
   color: #0077cc;
 }
+.btn.dropdown-toggle::after {
+    display: none;
+}
+.dropdown {
+    position: relative;
+    display: inline-block; /* Isso permite que o dropdown fique alinhado com outros elementos */
+}
+
+.dropdown-menu {
+    top:100% !important;
+    transform: translate3d(0,0,0) !important;
+    z-index:1000;
+}
+
 
 .navbar {
     background-color: #607D8B;
@@ -136,10 +150,16 @@ button.accept-policy {
     width: 100%;
     height:auto;
 }
-.info h6{
-    margin:0;
-    padding:0;
+
+.info h6 {
+    max-width: 100%; /* ou você pode especificar uma largura máxima específica, como 200px */
+    white-space: nowrap; /* impede a quebra de linha */
+    overflow: hidden; /* esconde o texto que excede a largura máxima */
+    text-overflow: ellipsis; /* adiciona reticências (...) ao final do texto, se for cortado */
+    margin: 0;
+    padding: 0;
 }
+
 .info p{
     font-size: 0.8rem;
     margin: 0;

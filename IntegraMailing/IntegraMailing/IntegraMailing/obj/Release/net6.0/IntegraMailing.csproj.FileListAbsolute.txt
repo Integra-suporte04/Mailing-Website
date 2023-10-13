@@ -79,3 +79,12 @@ C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraM
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\IntegraMailing.pdb
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\IntegraMailing.genruntimeconfig.cache
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\ref\IntegraMailing.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Logging.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Options.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Primitives.dll

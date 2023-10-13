@@ -10,5 +10,14 @@ C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraM
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Logging.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Options.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.Extensions.Primitives.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\MySqlConnector.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Pomelo.EntityFrameworkCore.MySql.dll

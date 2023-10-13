@@ -1,8 +1,23 @@
-﻿.btn-config{
-    width:100%;
-    background-color:aqua;
-}
-.btn-config i{
+﻿.btn-config i{
     cursor:pointer;
     color:goldenrod;
+}
+.edit-input,
+.save-button {
+    display: none;
+}
+
+.editing .edit-input,
+.editing .save-button {
+    display: block;
+}
+
+.disabled .edit-button {
+    pointer-events: none;
+}
+.edit-field{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }

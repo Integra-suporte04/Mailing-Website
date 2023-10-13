@@ -1,5 +1,6 @@
 ﻿using IntegraMailing.Data;
 using IntegraMailing.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -10,47 +11,53 @@ namespace IntegraMailing.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
+        private ApplicationUser _currentUser;
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser)
         {
             _logger = logger;
             _userManager = userManager;
+            _currentUser = currentUser;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user != null)
-            {
-                ViewData["AccountType"] = user.AccountType;
-                ViewData["UserEmail"] = user.Email;
-                ViewData["UserName"] = user.UserName;
+            await GetUserInfo();
 
-                Debug.WriteLine("User is NOT null");
-                _logger.LogInformation("a");
-
-            }
-            else
-            {
-
-                Debug.WriteLine("User is null");
-                _logger.LogInformation("b");
-
-                // ... o restante do seu código ...
-
-            }
             return View();
         }
-
-        public IActionResult Lista()
+        [Authorize]
+        public async Task<IActionResult> Lista()
         {
-           // _logger.LogInformation("Página Listas foi acessada.");
+            // _logger.LogInformation("Página Listas foi acessada.");
+            await GetUserInfo();
+
             var listaViewModel = LoadCSVController.listaViewModel;
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
+        }
+        public async Task<IActionResult> Perfil()
+        {
+            // _logger.LogInformation("Página Listas foi acessada.");
+            await GetUserInfo();
+
+            
+            return View();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        private async Task GetUserInfo()
+        {
+            _currentUser = await _userManager.GetUserAsync(User);
+            if (_currentUser != null)
+            {
+                ViewData["AccountType"] = _currentUser.AccountType;
+                ViewData["UserEmail"] = _currentUser.Email;
+                ViewData["UserName"] = _currentUser.UserName;
+
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using IntegraMailing.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
 
 namespace IntegraMailing.Controllers
 {
@@ -34,7 +35,7 @@ namespace IntegraMailing.Controllers
         {
             var user = new ApplicationUser
             {
-                UserName = email,
+                UserName = name,
                 Email = email,
                 //DateOfBirth = dob,
                 PhoneNumber = "039120391",
@@ -62,20 +63,21 @@ namespace IntegraMailing.Controllers
 
         }
 
-        [HttpPost]
         //[ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Login(SignInModel model)
         {
             if (ModelState.IsValid)
             {
-
-                var user = await _userManager.FindByEmailAsync(_userManager.NormalizeEmail(model.Email));
-
+                System.Diagnostics.Debug.WriteLine(model.Email.GetType());
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                
                 if (user != null)
                 {
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
+                        System.Diagnostics.Debug.WriteLine(User.Identity.IsAuthenticated);
                         return RedirectToAction("Index", "Home");  // Redirecionar para a página inicial ou a página desejada
                     }
                     
@@ -89,5 +91,41 @@ namespace IntegraMailing.Controllers
 
             return View("~/Views/Account/SignIn.cshtml",model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("SignIn", "Account");
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(string field, int fieldId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return View("~/Views/Home/Perfil.cshtml");
+            }
+
+            switch (fieldId)
+            {
+                case 0:
+                    user.UserName = field;
+                    break;
+                case 1:
+                    user.Email = field;
+                    break;
+                case 2:
+                    //_userManager.ChangePasswordAsync(user, _userManager.pass, );
+                    break;
+            }
+            await _userManager.UpdateAsync(user);
+            return RedirectToAction("Perfil", "Home");
+        }
+
+        // Adicione métodos similares para outros campos que deseja permitir a edição
+
+
     }
 }

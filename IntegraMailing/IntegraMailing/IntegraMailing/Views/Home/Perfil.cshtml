@@ -1,5 +1,7 @@
-﻿
-@{
+﻿@{
+    var userEmail = ViewData["UserEmail"] as string;
+    var userName = ViewData["UserName"] as string;
+    ViewData["Title"] = "Perfil";
 }
 
 <div class="container-fluid">
@@ -7,14 +9,54 @@
 
     <div class="templateDiv">
         <!-- Perfil de usuário comum-->
-
-        <button class="btn btn-config">Alterar nome <i class="fas fa-cog"></i></button>
-        <button class="btn btn-config">Alterar email <i class="fas fa-cog"></i></button>
-        <button class="btn btn-config">Alterar senha <i class="fas fa-cog"></i></button>
-        
-
-
-
-
+        <form asp-controller="Account" asp-action="EditProfile">
+            <div class="edit-field" data-field="Name">
+                <span class="field-value">@userName</span>
+                <input type="text" class="edit-input" value="@userName" name="field"/>
+                <button type="button" class="btn btn-config edit-button"><i class="fas fa-cog"></i></button> 
+                <input type="number" value="0" hidden name="fieldId"/>
+                <button type="submit" class=" btn save-button">Salvar</button>
+            </div>
+        </form>
+        <form asp-controller="Account" asp-action="EditProfile">
+            <div class="edit-field" data-field="Email">
+                <span class="field-value">@userEmail</span>
+                <input type="text" class="edit-input" value="@userEmail" name="field" />
+                <button type="button" class="btn btn-config edit-button"><i class="fas fa-cog"></i></button>
+                <input type="number" value="1" hidden name="fieldId" />
+                <button type="submit" class=" btn save-button">Salvar</button>
+            </div>
+        </form>
+        <!--
+        <form asp-controller="Account" asp-action="EditProfile">
+            <div class="edit-field" data-field="Password">
+                <input type="password" class="edit-input" value="" name="field" />
+                <button type="button" class="btn btn-config edit-button"><i class="fas fa-cog"></i></button>
+                <input type="number" value="2" hidden name="fieldId" />
+                <button type="submit" class=" btn save-button">Salvar</button>
+            </div>
+        </form>
+        -->
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.edit-button').click(function () {
+                var field = $(this).closest('.edit-field');
+                field.toggleClass('editing');
+                $('.edit-field').not(field).addClass('disabled');
+
+                var isEditing = field.hasClass('editing');
+                field.find('.field-value').toggle(!isEditing);
+                field.find('.edit-input').toggle(isEditing);
+                field.find('.save-button').toggle(isEditing);
+            });
+
+        });
+
+        // Adicione funções similares para outros campos que deseja permitir a edição
+
+    </script>
+}

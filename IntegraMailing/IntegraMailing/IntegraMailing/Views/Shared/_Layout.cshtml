@@ -30,17 +30,18 @@
             </div>
 
             <div class="navbar-icons">
-                <i class="fas fa-search"></i> <!-- Ícone de lupa -->
                 <i class="fas fa-cog"></i> <!-- Ícone de engrenagem -->
-                <div class="notification">
-                    <i class="fas fa-envelope"></i> <!-- Ícone de email -->
-                    <span class="badge">0</span> <!-- Número de notificações -->
-                </div>
+                <!-- <div class="notification">
+                        <i class="fas fa-envelope"></i>  Ícone de email 
+                     <span class="badge">0</span>  Número de notificações
+            </div> -->
                 <div class="notification">
                     <i class="fas fa-bell"></i> <!-- Ícone de sino -->
                     <span class="badge">0</span> <!-- Número de notificações -->
                 </div>
-                <i class="fas fa-sign-out-alt"></i> <!-- Ícone de logout -->
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <button type="submit" class="btn"><i class="fas fa-sign-out-alt"></i></button>
+                </form><!-- Ícone de logout -->
             </div>
         </nav>
     </header>
@@ -70,7 +71,16 @@
                             <h6>@userName (@accountType)</h6> <!-- Nome do usuário e empresa -->
                             <p>@userEmail</p> <!-- Email do usuário -->
                         </div>
-                        <button class="btn profile-button"><i class="fa-solid fa-chevron-down" style="color:white;"></i></button> <!-- Botão para expandir opções -->
+                        <div class="dropdown">
+                            <button class="btn profile-button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa-solid fa-chevron-down" style="color:white;"></i>
+                            </button> <!-- Botão para expandir opções -->
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a asp-area="" asp-controller="Home" asp-action="Perfil" class="dropdown-item">Perfil</a>
+                                <a class="dropdown-item" href="#">Notificações</a>
+                                <a class="dropdown-item" href="#">Recarregar</a>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -112,6 +122,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cfec620395.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

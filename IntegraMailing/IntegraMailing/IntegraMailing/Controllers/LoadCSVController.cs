@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.IO;
-using System.Collections.Generic;
-using System.Web;
 using IntegraMailing.Models;
+using Microsoft.AspNetCore.Identity;
+using IntegraMailing.Data;
+
 namespace IntegraMailing.Controllers
 {
     public class LoadCSVController : Controller
@@ -14,26 +12,28 @@ namespace IntegraMailing.Controllers
 
         };
         private readonly ILogger<LoadCSVController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private ApplicationUser _currentUser;
 
-        public LoadCSVController(ILogger<LoadCSVController> logger)
+        public LoadCSVController(ILogger<LoadCSVController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser)
         {
             _logger = logger;
+            _userManager = userManager;
+            _currentUser = currentUser;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
 
-        [HttpGet]
-        public IActionResult Lista()
-        {
-            return View("~/Views/Home/Lista.cshtml", listaViewModel);
-        }
+        //[HttpGet]
+        //public IActionResult Lista()
+        //{
+        //    return View("~/Views/Home/Lista.cshtml", listaViewModel);
+        //}
 
         [HttpPost]
-        public IActionResult AtualizaLinha(IFormFile file,int linhaId)
+        public async Task<IActionResult> AtualizaLinha(IFormFile file,int linhaId)
         {
-            
+            await GetUserInfo();
+
             if (file != null && file.Length > 0)
             {
                 // Lê e processa o arquivo CSV para obter os dados desejados
@@ -53,22 +53,25 @@ namespace IntegraMailing.Controllers
             return View("~/Views/Home/Lista.cshtml",listaViewModel);
         }
         [HttpPost]
-        public IActionResult NovaLinha()
+        public async Task<IActionResult> NovaLinha()
         {
+            await GetUserInfo();
             listaViewModel.LinhaLista.Add(new Linha("NoFile.Csv", DateTime.Now, "Sem arquivo"));
             ViewData["Title"] = listaViewModel.LinhaLista.Count;
             listaViewModel.MaxPaginaCounter = ((listaViewModel.LinhaLista.Count-1) / 6) +1;
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
         }
         [HttpPost]
-        public IActionResult TrocaPagina(int index)
+        public async Task<IActionResult> TrocaPagina(int index)
         {
+            await GetUserInfo();
             listaViewModel.PaginaCounter = index;
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
         }
         [HttpPost]
-        public IActionResult DeletaLinha(int index)
+        public async Task<IActionResult> DeletaLinha(int index)
         {
+            await GetUserInfo();
             listaViewModel.LinhaLista.RemoveAt(index);
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
 
@@ -81,10 +84,22 @@ namespace IntegraMailing.Controllers
             listaViewModel.LinhaLista[linhaId].Status = novoStatus;
 
         }
-        public IActionResult RecarregarPagina()
+        public async Task<IActionResult> RecarregarPagina()
         {
+            await GetUserInfo();
             // Redireciona para a própria ação atual, que recarregará a página
             return RedirectToAction("Listas");
+        }
+        private async Task GetUserInfo()
+        {
+            _currentUser = await _userManager.GetUserAsync(User);
+            if (_currentUser != null)
+            {
+                ViewData["AccountType"] = _currentUser.AccountType;
+                ViewData["UserEmail"] = _currentUser.Email;
+                ViewData["UserName"] = _currentUser.UserName;
+
+            }
         }
     }
 

@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
-
+builder.Services.AddScoped<ApplicationUser>();
 
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 connectionString = "Server=192.168.1.29;Database=test;User=root;Password=Hagley@2014;";
@@ -56,7 +56,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowLocalImages");
 
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
