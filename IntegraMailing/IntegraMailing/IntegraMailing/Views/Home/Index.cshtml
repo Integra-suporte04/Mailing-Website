@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    var accountType = ViewData["AccountType"] as string;
 }
 
 <style>
@@ -17,9 +18,21 @@
         }
 
 </style>
-
 <div class="text-center index-main">
-    <img src="~/assets/issabel_logo_mini.png" alt="Logo Integra Sistema"/>
+
+    @if(accountType == "Admin")
+    {
+        <div class="container">
+            <h3>Edição de modo administrador</h3>
+            <form asp-controller="Home" asp-action="ApplyUserToEnterprise">
+
+            </form>
+        </div>
+    }
+    else
+    {   
+        <img src="~/assets/issabel_logo_mini.png" alt="Logo Integra Sistema" />  
+    }
 
 </div>
 

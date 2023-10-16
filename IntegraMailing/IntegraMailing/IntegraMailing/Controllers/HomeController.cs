@@ -9,12 +9,12 @@ namespace IntegraMailing.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
         private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationUser _currentUser;
-        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser)
+        public HomeController(UserManager<ApplicationUser> userManager, ApplicationUser currentUser)
         {
-            _logger = logger;
+
             _userManager = userManager;
             _currentUser = currentUser;
         }

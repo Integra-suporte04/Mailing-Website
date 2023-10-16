@@ -2,6 +2,8 @@
 using IntegraMailing.Models;
 using Microsoft.AspNetCore.Identity;
 using IntegraMailing.Data;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace IntegraMailing.Controllers
 {
@@ -37,7 +39,6 @@ namespace IntegraMailing.Controllers
             if (file != null && file.Length > 0)
             {
                 // Lê e processa o arquivo CSV para obter os dados desejados
-                // Suponhamos que você obtenha o nome do arquivo, data e status do arquivo
 
                 string nomeArquivo = file.FileName;
                 DateTime dataEnvio = DateTime.Now; // Data atual como exemplo
@@ -47,7 +48,7 @@ namespace IntegraMailing.Controllers
                 // Suponhamos que você tenha um serviço ou lógica para fazer isso
                 AtualizarLinha(linhaId, nomeArquivo, dataEnvio, status);
 
-
+                await RunMailingScript();
             }
             
             return View("~/Views/Home/Lista.cshtml",listaViewModel);
@@ -99,6 +100,63 @@ namespace IntegraMailing.Controllers
                 ViewData["UserEmail"] = _currentUser.Email;
                 ViewData["UserName"] = _currentUser.UserName;
 
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RunMailingScript()
+        {
+            try
+            {
+                // Define o caminho do script Python
+                var pythonScriptPath = "/home/valida_script/validaV2.py";
+
+                // Cria uma nova instância da classe ProcessStartInfo
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = "python3.8", // ou "python3" dependendo do seu sistema
+                    Arguments = pythonScriptPath,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+
+                // Cria e executa o processo
+                using var process = Process.Start(startInfo);
+                if (process != null)
+                {
+                    // Lê a saída padrão do processo (que deve ser o valor retornado pelo script Python)
+                    string result = await process.StandardOutput.ReadToEndAsync();
+
+                    // Aguarda a conclusão do processo
+                    process.WaitForExit();
+
+                    // Converte a saída para int e retorna
+                    if (int.TryParse(result, out int returnValue))
+                    {
+                        Debug.WriteLine("WORKED I THINK");
+                        _logger.Log(LogLevel.Debug,"Code worked and returned an integer value");
+                        return Ok(returnValue);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Not int returned");
+                        _logger.Log(LogLevel.Debug, "Code worked, but no integer value were returned");
+
+                        return BadRequest("A saída do script Python não é um número inteiro válido.");
+                    }
+                }
+                else
+                        _logger.Log(LogLevel.Debug,"Code didn't work for some unexpected reason");
+                {
+                    return StatusCode(500, "Não foi possível iniciar o processo Python.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Didn't even work bro...");
+
+                return StatusCode(500, $"Erro: {ex.Message}");
             }
         }
     }

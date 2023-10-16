@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using IntegraMailing.Models;
-using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 
 namespace IntegraMailing.Controllers
 {
+
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -29,18 +30,29 @@ namespace IntegraMailing.Controllers
             return View();
         }
 
+        [HttpGet("CheckEmail")]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+               return Json(false); // Email já está em uso
+            }
+
+
+            return Json(true); // Email disponível
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Register(string name, string pass, string email, DateTime dob, string accountType)
+        public async Task<IActionResult> Register(string name, string pass, string email)
         {
             var user = new ApplicationUser
             {
                 UserName = name,
                 Email = email,
-                //DateOfBirth = dob,
                 PhoneNumber = "039120391",
                 LockoutEnd = DateTime.Now,
-                AccountType = accountType
+                AccountType = "Usuario"
             };
 
             var result = await _userManager.CreateAsync(user, pass.ToString());
@@ -69,7 +81,7 @@ namespace IntegraMailing.Controllers
         {
             if (ModelState.IsValid)
             {
-                System.Diagnostics.Debug.WriteLine(model.Email.GetType());
+                Debug.WriteLine(model.Email.GetType());
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 
                 if (user != null)
@@ -77,14 +89,14 @@ namespace IntegraMailing.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
-                        System.Diagnostics.Debug.WriteLine(User.Identity.IsAuthenticated);
+                        Debug.WriteLine(User.Identity.IsAuthenticated);
                         return RedirectToAction("Index", "Home");  // Redirecionar para a página inicial ou a página desejada
                     }
                     
                 }
                 else
                 {
-                    System.Diagnostics.Debug.WriteLine("user is null!");
+                   Debug.WriteLine("user is null!");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
@@ -124,7 +136,10 @@ namespace IntegraMailing.Controllers
             return RedirectToAction("Perfil", "Home");
         }
 
-        // Adicione métodos similares para outros campos que deseja permitir a edição
+
+
+
+
 
 
     }

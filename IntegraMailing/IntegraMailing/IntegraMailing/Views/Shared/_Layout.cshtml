@@ -58,7 +58,7 @@
                             <img src="/assets/userIcon.png" alt="Imagem de Usuário" class="img-circle" /> <!--Imagem do usuário-->
                         </div>
                         
-                            @if (accountType == "Empregado")
+                            @if (accountType == "Admin")
                             {
                                 <div class="user-small">
                                     <img src="/assets/enterprise.png" alt="Imagem de Empresa" /> <!--Imagem da empresa-->
@@ -68,7 +68,7 @@
 
                     <div class="profile-data">
                         <div class="info">
-                            <h6>@userName (@accountType)</h6> <!-- Nome do usuário e empresa -->
+                            <h6>@userName</h6> <!-- Nome do usuário e empresa -->
                             <p>@userEmail</p> <!-- Email do usuário -->
                         </div>
                         <div class="dropdown">

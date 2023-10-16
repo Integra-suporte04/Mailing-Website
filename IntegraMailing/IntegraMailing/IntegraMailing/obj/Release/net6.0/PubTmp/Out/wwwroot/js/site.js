@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 });
 
-
+/*
 function adjustFontSize() {
     var infoDiv = document.querySelector('.info h6');
     var fontSize = window.getComputedStyle(infoDiv, null).getPropertyValue('font-size');
@@ -31,3 +31,4 @@ function adjustFontSize() {
 window.onload = adjustFontSize;  // chama a função quando a página é carregada
 window.onresize = adjustFontSize;  // chama a função quando a janela é redimensionada
 
+*/

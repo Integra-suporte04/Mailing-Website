@@ -5,6 +5,11 @@
 .edit-input,
 .save-button {
     display: none;
+
+}
+.save-button {
+    position: absolute;
+    right: 2%;
 }
 
 .editing .edit-input,
