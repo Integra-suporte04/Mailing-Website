@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "71WdVnCdSv5GGjY6GcJtO1oIWsJYm0MJp5d06xwBhOXpA+ICeoATa3xOZsimwWT++WLaZL3uVEXPLYCTwMw1bg==",
+  "dgSpecHash": "oI5vqv740t/Ae9FmYiMliwSEFqnfUNvmjrpdUC7WZ4kE0bpiREZQcMq2Hlun7Ueir8y28R82QoW8auJ2PYg6wA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\IntegraMailing.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Usuário\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\Usuário\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.0\\microsoft.aspnetcore.cryptography.internal.6.0.0.nupkg.sha512",
     "C:\\Users\\Usuário\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\6.0.0\\microsoft.aspnetcore.cryptography.keyderivation.6.0.0.nupkg.sha512",
     "C:\\Users\\Usuário\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\6.0.0\\microsoft.aspnetcore.identity.entityframeworkcore.6.0.0.nupkg.sha512",

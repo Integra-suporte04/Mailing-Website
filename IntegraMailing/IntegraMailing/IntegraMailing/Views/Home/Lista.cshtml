@@ -30,9 +30,9 @@
             {
                 string backgroundColor = (i % 2 == 0) ? "lightgray" : "white";
 
-                string nameField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Nome : "Nome";
-                DateTime dateField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Data : DateTime.Now;
-                string statusField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Status : "Sem arquivo";
+                string? nameField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Name : "Nome";
+                DateTime dateField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Data_Sent : DateTime.Now;
+                string? statusField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Status : "Sem arquivo";
 
                 <div class="coluna" style="background-color:@backgroundColor;">
                     <div>@nameField</div>
@@ -72,7 +72,7 @@
 
             }
             <div class="pagina-info">
-                Mostrando @((6*Model.PaginaCounter) -5) a @((6*Model.PaginaCounter)) de @Model.LinhaLista.Count resultados
+                Mostrando @((6 * Model.PaginaCounter) - 5) a @((6 * Model.PaginaCounter < Model.LinhaLista.Count) ? (6 * Model.PaginaCounter) : (Model.LinhaLista.Count)) de @Model.LinhaLista.Count resultados
             </div>
 
             <!-- Botões de navegação de página -->

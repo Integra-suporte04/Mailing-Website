@@ -13,7 +13,7 @@ builder.Logging.AddDebug();
 builder.Services.AddScoped<ApplicationUser>();
 
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-connectionString = "Server=192.168.1.29;Database=test;User=root;Password=Hagley@2014;";
+connectionString = "Server=192.168.1.34;Database=test;User=root;Password=Hagley@2014;";
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString,

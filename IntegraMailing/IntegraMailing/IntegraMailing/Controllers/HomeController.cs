@@ -33,6 +33,7 @@ namespace IntegraMailing.Controllers
             await GetUserInfo();
 
             var listaViewModel = LoadCSVController.listaViewModel;
+            return RedirectToAction("GetCampanhas", "LoadCSV");
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
         }
         public async Task<IActionResult> Perfil()
