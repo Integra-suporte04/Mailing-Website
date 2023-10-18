@@ -3,28 +3,38 @@ using IntegraMailing.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace IntegraMailing.Controllers
 {
     public class HomeController : Controller
     {
-        
+
+        public static HomeModel homeModel = new HomeModel
+        {
+
+        };
         private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationUser _currentUser;
-        public HomeController(UserManager<ApplicationUser> userManager, ApplicationUser currentUser)
+        private readonly ApplicationDbContext _context;
+        public HomeController(UserManager<ApplicationUser> userManager, ApplicationUser currentUser, ApplicationDbContext context)
         {
 
             _userManager = userManager;
             _currentUser = currentUser;
+            _context = context;
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            await GetUserInfo();
+            _currentUser = await _userManager.GetUserAsync(User);
+            homeModel.empresas = await _context.Empresas.ToListAsync();
+            GetUserInfo(_currentUser);
 
-            return View();
+
+            return View(homeModel);
         }
         [Authorize]
         public async Task<IActionResult> Lista()
@@ -49,6 +59,21 @@ namespace IntegraMailing.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [HttpPost]
+        public async Task ApplyUserToEnterprise(string empresaId, string nomeUsuario)
+        {
+            var user = await _userManager.FindByEmailAsync(nomeUsuario);
+            
+
+            if(user != null)
+            {
+                user.Empresa = empresaId;
+                await _context.SaveChangesAsync();
+
+            }
+
+            RedirectToAction("Index", "Home", homeModel);
+        }
         private async Task GetUserInfo()
         {
             _currentUser = await _userManager.GetUserAsync(User);
@@ -57,6 +82,16 @@ namespace IntegraMailing.Controllers
                 ViewData["AccountType"] = _currentUser.AccountType;
                 ViewData["UserEmail"] = _currentUser.Email;
                 ViewData["UserName"] = _currentUser.UserName;
+
+            }
+        }
+        private void GetUserInfo(ApplicationUser user)
+        {
+            if (user != null)
+            {
+                ViewData["AccountType"] = user.AccountType;
+                ViewData["UserEmail"] = user.Email;
+                ViewData["UserName"] = user.UserName;
 
             }
         }

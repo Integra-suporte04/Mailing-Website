@@ -4,15 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using IntegraMailing.Data;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using CsvHelper;
-using CsvHelper.Configuration;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text; 
+
 
 
 namespace IntegraMailing.Controllers
@@ -70,17 +62,12 @@ namespace IntegraMailing.Controllers
                 // Lê e processa o arquivo CSV para obter os dados desejados
 
                 List<tabela_mailing> numeros = new List<tabela_mailing>();
-                var records = new List<string>();
-                using var reader = new StreamReader(file.OpenReadStream());
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
+                using (var reader = new StreamReader(file.OpenReadStream()))
                 {
-                    var cells = line.Split(new[] { ',' }, StringSplitOptions.None);  // Assuming comma as delimiter
-                    records.AddRange(cells);
-                    foreach(string cell in cells)
+                    string line;
+                    while((line = await reader.ReadLineAsync()) != null)
                     {
-                        numeros.Add(new tabela_mailing {numero = cell }) ;
+                        numeros.Add(new tabela_mailing { numero = line});
                     }
                 }
 
@@ -104,6 +91,8 @@ namespace IntegraMailing.Controllers
         public async Task<IActionResult> DeletaLinha(int index)
         {
             await GetUserInfo();
+
+            await DeleteCampanha(listaViewModel.LinhaLista[index].Id);
             listaViewModel.LinhaLista.RemoveAt(index);
             return await GetCampanhas();
             //return View("~/Views/Home/Lista.cshtml", listaViewModel);
@@ -227,6 +216,27 @@ namespace IntegraMailing.Controllers
             return Ok();
 
         }
+        public async Task<IActionResult> DeleteCampanha(int id)
+        {
+            var campanha = await _context.Campanhas.FindAsync(id);
+            var numeros_finalizados = _context.mailing_finalizado.Where(m => m.campanha_Id == id);
+            if (campanha == null)
+            {
+                // Se não encontrar a campanha, retorna um 404 Not Found
+                return NotFound();
+            }
+
+            _context.mailing_finalizado.RemoveRange(numeros_finalizados);
+            // Remove a campanha do contexto
+            await _context.SaveChangesAsync();
+            _context.Campanhas.Remove(campanha);
+
+            // Salva as mudanças no banco de dados
+            await _context.SaveChangesAsync();
+
+            // Retorna um 200 OK
+            return Ok();
+        }
         //Adiciona os registros recolhidos do arquivo .csv, na tabela mailing
         public async Task<IActionResult> AddMailing([FromBody] List<tabela_mailing> datas)
         {
@@ -240,6 +250,7 @@ namespace IntegraMailing.Controllers
             return Ok();
 
         }
+
 
         //Método para pegar as campanhas no SQL e transformar em formato de Lista dentro da Model ListaViewModel.
         //A Model é passada para a View como parametro, com isso os dados serão enviados para lá.

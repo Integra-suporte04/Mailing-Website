@@ -2,12 +2,10 @@
 
 namespace IntegraMailing.Data
 {
-    public class tabela_mailing
+    public class Empresas
     {
         [Key]
         public int Id { get; set; }
-        public string? numero { get; set; }
-        public int campanha_Id { get; set; }
-
+        public string? Nome { get; set; }  
     }
 }

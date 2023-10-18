@@ -11,12 +11,16 @@ namespace IntegraMailing.Data
         }
         public DbSet<Campanhas> Campanhas { get; set; }
         public DbSet<tabela_mailing> tabela_mailing { get; set; }
+        public DbSet<MailingFinalizado> mailing_finalizado { get; set; }
+        public DbSet<Empresas> Empresas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            //Adicione aqui caso a classe tenha um nome diferente da tabela
             builder.Entity<Campanhas>().ToTable("campanhas");
+            builder.Entity<MailingFinalizado>().ToTable("mailing_finalizado");
         }
 
         // Seus DbSets para outras entidades, se houver
