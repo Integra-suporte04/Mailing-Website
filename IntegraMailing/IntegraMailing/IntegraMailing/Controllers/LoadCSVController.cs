@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using IntegraMailing.Data;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-
-
+using IntegraMailing.Services;
+using System.Text.Json;
 
 namespace IntegraMailing.Controllers
 {
@@ -18,14 +18,18 @@ namespace IntegraMailing.Controllers
         private readonly ILogger<LoadCSVController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IMailingService _mailingService;
         private ApplicationUser _currentUser;
+     
 
-        public LoadCSVController(ILogger<LoadCSVController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser, ApplicationDbContext context)
+        public LoadCSVController(ILogger<LoadCSVController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser, ApplicationDbContext context, IMailingService mailingService)
         {
             _logger = logger;
             _userManager = userManager;
             _currentUser = currentUser;
             _context = context;
+            _mailingService = mailingService;
+    
         }
 
         //Método para criar nova campanha e já salvar no banco de dados SQL
@@ -67,7 +71,8 @@ namespace IntegraMailing.Controllers
                     string line;
                     while((line = await reader.ReadLineAsync()) != null)
                     {
-                        numeros.Add(new tabela_mailing { numero = line});
+                        numeros.Add(new tabela_mailing { numero = line, campanha_Id = listaViewModel.LinhaLista[linhaId].Id});
+                        
                     }
                 }
 
@@ -80,7 +85,7 @@ namespace IntegraMailing.Controllers
 
                 await UpdateCampanha(campanhas, listaViewModel.LinhaLista[linhaId].Id);
                 await AddMailing(numeros);
-
+                await StartMailing(listaViewModel.LinhaLista[linhaId].Id);
                 //await RunMailingScript();
             }
                 return await GetCampanhas();
@@ -134,61 +139,45 @@ namespace IntegraMailing.Controllers
             }
         }
 
-        //Método para rodar o script python de mailing (Ainda sofrerá muita alteração)
-        [HttpGet]
-        public async Task<IActionResult> RunMailingScript()
+        [HttpPost]
+        public async Task<IActionResult> StartMailing(int campanhaId)
         {
-            try
+
+           bool success = await _mailingService.StartMailing(campanhaId);
+
+            if(!success)
             {
-                // Define o caminho do script Python
-                var pythonScriptPath = "/home/valida_script/validaV2.py";
-
-                // Cria uma nova instância da classe ProcessStartInfo
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = "python3.8", // ou "python3" dependendo do seu sistema
-                    Arguments = pythonScriptPath,
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                };
-
-                // Cria e executa o processo
-                using var process = Process.Start(startInfo);
-                if (process != null)
-                {
-                    // Lê a saída padrão do processo (que deve ser o valor retornado pelo script Python)
-                    string result = await process.StandardOutput.ReadToEndAsync();
-
-                    // Aguarda a conclusão do processo
-                    process.WaitForExit();
-
-                    // Converte a saída para int e retorna
-                    if (int.TryParse(result, out int returnValue))
-                    {                       
-                        _logger.Log(LogLevel.Debug,"Code worked and returned an integer value");
-                        return Ok(returnValue);
-                    }
-                    else
-                    {                      
-                        _logger.Log(LogLevel.Debug, "Code worked, but no integer value were returned");
-
-                        return BadRequest("A saída do script Python não é um número inteiro válido.");
-                    }
-                }
-                else
-                {
-                    _logger.Log(LogLevel.Debug,"Code didn't work for some unexpected reason");
-                    return StatusCode(500, "Não foi possível iniciar o processo Python.");
-                }
+                return BadRequest("Uma campanha com o mesmo ID já está em execução.");
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Didn't even work bro...");
 
-                return StatusCode(500, $"Erro: {ex.Message}");
-            }
+            return Ok();
         }
+
+        public void ExecuteScript(int campanhaId)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "python3.8", // ou "python3" dependendo do seu sistema
+                Arguments = $"/home/validacao/Scripts/validaV2.py {campanhaId}",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            };
+
+            using var process = Process.Start(startInfo);
+            /*
+            if (process != null)
+            {
+               process.WaitForExit();
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, "Não foi possível iniciar o processo Python.");
+                throw new Exception("Não foi possível iniciar o processo Python.");
+            }
+            */
+        }
+
         //Cria uma nova campanha ao acionar o método NovaLinha e salva essa campanha
         [HttpPost]
         public async Task<IActionResult> SaveCampanha([FromBody] Campanhas data)
@@ -220,6 +209,7 @@ namespace IntegraMailing.Controllers
         {
             var campanha = await _context.Campanhas.FindAsync(id);
             var numeros_finalizados = _context.mailing_finalizado.Where(m => m.campanha_Id == id);
+            var numeros_mailing = _context.tabela_mailing.Where(m => m.campanha_Id == id);
             if (campanha == null)
             {
                 // Se não encontrar a campanha, retorna um 404 Not Found
@@ -227,6 +217,7 @@ namespace IntegraMailing.Controllers
             }
 
             _context.mailing_finalizado.RemoveRange(numeros_finalizados);
+            _context.tabela_mailing.RemoveRange(numeros_mailing);
             // Remove a campanha do contexto
             await _context.SaveChangesAsync();
             _context.Campanhas.Remove(campanha);
@@ -265,6 +256,12 @@ namespace IntegraMailing.Controllers
 
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
 
+        }
+        [HttpPost]
+        public IActionResult SetFileName(IFormFile file)
+        {
+ 
+            return Json(new {fileName = file.FileName});
         }
 
     }

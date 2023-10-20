@@ -88,3 +88,4 @@ C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraM
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Options.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\Microsoft.Extensions.Primitives.dll
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\bin\Release\net6.0\CsvHelper.dll

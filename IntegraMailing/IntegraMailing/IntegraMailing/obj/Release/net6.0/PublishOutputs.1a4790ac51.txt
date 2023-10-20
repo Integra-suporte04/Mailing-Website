@@ -5,6 +5,7 @@ C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraM
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.deps.json
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.runtimeconfig.json
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\IntegraMailing.pdb
+C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\CsvHelper.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.AspNetCore.Identity.UI.dll
 C:\Users\Usuário\Desktop\Mailing-Website\IntegraMailing\IntegraMailing\IntegraMailing\obj\Release\net6.0\PubTmp\Out\Microsoft.EntityFrameworkCore.dll

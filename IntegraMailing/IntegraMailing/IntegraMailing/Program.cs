@@ -3,6 +3,8 @@ using IntegraMailing.Data;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using IntegraMailing.Services;
+using IntegraMailing.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,10 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
     serverOptions.ListenAnyIP(5000);
 });
 
+builder.Services.AddSingleton<IMailingService, MailingService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<IMailingService>() as MailingService);
+builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<LoadCSVController>();
 var app = builder.Build();
 
 // Chama o método de inicialização para criar as roles
@@ -47,8 +53,6 @@ else
 {
     app.UseDeveloperExceptionPage();
 }
-
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

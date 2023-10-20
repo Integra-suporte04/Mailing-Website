@@ -34,7 +34,7 @@ namespace IntegraMailing.Controllers
             GetUserInfo(_currentUser);
 
 
-            return View(homeModel);
+            return View("~/Views/Home/Index.cshtml", homeModel);
         }
         [Authorize]
         public async Task<IActionResult> Lista()
@@ -60,7 +60,7 @@ namespace IntegraMailing.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         [HttpPost]
-        public async Task ApplyUserToEnterprise(string empresaId, string nomeUsuario)
+        public async Task<IActionResult> ApplyUserToEnterprise(string empresaId, string nomeUsuario)
         {
             var user = await _userManager.FindByEmailAsync(nomeUsuario);
             
@@ -72,7 +72,7 @@ namespace IntegraMailing.Controllers
 
             }
 
-            RedirectToAction("Index", "Home", homeModel);
+            return await Index();
         }
         private async Task GetUserInfo()
         {
@@ -84,6 +84,16 @@ namespace IntegraMailing.Controllers
                 ViewData["UserName"] = _currentUser.UserName;
 
             }
+        }
+        public async Task<IActionResult> CreateEmpresa(string nomeEmpresa)
+        {
+
+            _context.Empresas.Add(new Empresas { Nome = nomeEmpresa });
+
+            await _context.SaveChangesAsync();
+
+            return await Index();
+
         }
         private void GetUserInfo(ApplicationUser user)
         {

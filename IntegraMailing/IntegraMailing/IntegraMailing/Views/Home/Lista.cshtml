@@ -34,14 +34,14 @@
                 DateTime dateField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Data_Sent : DateTime.Now;
                 string? statusField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Status : "Sem arquivo";
 
-                <div class="coluna" style="background-color:@backgroundColor;">
+                <div id="coluna-@i" class="coluna" style="background-color:@backgroundColor;">
                     <div>@nameField</div>
                     <div>@dateField</div>
                     <div>@statusField</div>
 
                     <form asp-controller="LoadCSV" asp-action="AtualizaLinha" method="post" enctype="multipart/form-data">
                         <label class="custom-file-upload">
-                            <input type="file" name="file" accept=".csv" id="file" style="display:none" required />
+                            <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
                             Carregar CSV
                         </label>
 
@@ -112,13 +112,8 @@
             </div>
         }
 
-
-
-
-
     </div>
 </div>
-
 
 
 @section Scripts
@@ -140,6 +135,30 @@
                     $(target).show();
                 }
             });
+
+            $('input[type=file]').change(function () {
+                var index = $(this).data('index');
+                var file = this.files[0];
+                var formData = new FormData();
+                formData.append('file', file);
+                formData.append('linhaId', index);
+
+                var inputElement = $(this);
+
+                $.ajax({
+                    url: '@Url.Action("SetFileName", "LoadCSV")',  // substitua 'GetFileName' e 'LoadCSV' pelos nomes reais do seu método e controlador
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: function (response) {
+                        // Atualizar o DOM com o nome do arquivo
+                        var fileName = response.fileName;
+                         $('#coluna-' + index).find('div:first').text(fileName);
+                    }
+                });
+            });
+
         });
 
 
