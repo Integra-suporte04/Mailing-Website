@@ -44,11 +44,11 @@ namespace IntegraMailing.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(string name, string pass, string email)
+        public async Task<IActionResult> Register(string pass, string email)
         {
             var user = new ApplicationUser
             {
-                UserName = name,
+                UserName = email,
                 Email = email,
                 PhoneNumber = "039120391",
                 LockoutEnd = DateTime.Now,
@@ -70,7 +70,7 @@ namespace IntegraMailing.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
 
-                return View("~/Views/Account/SignUp.cshtml");
+                return RedirectToAction("SignUp");
             }
 
         }
@@ -101,7 +101,7 @@ namespace IntegraMailing.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 
-            return View("~/Views/Account/SignIn.cshtml",model);
+            return RedirectToAction("SignIn");
         }
 
         [HttpPost]
@@ -123,24 +123,44 @@ namespace IntegraMailing.Controllers
             switch (fieldId)
             {
                 case 0:
-                    user.UserName = field;
                     break;
                 case 1:
                     user.Email = field;
+                    user.UserName = field;
                     break;
-                case 2:
-                    //_userManager.ChangePasswordAsync(user, _userManager.pass, );
-                    break;
+
             }
             await _userManager.UpdateAsync(user);
             return RedirectToAction("Perfil", "Home");
         }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string CurrentPassword, string NewPassword, string ConfirmNewPassword)
+        {
+            if (NewPassword != ConfirmNewPassword)
+            {
+                ModelState.AddModelError(string.Empty, "As senhas não correspondem.");
+                return RedirectToAction("Perfil", "Home");  // Retorne à página de perfil com uma mensagem de erro
+            }
 
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("SignIn");  // Se o usuário não estiver logado, redirecione para a página de login
+            }
 
+            var result = await _userManager.ChangePasswordAsync(user, CurrentPassword, NewPassword);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Perfil", "Home");  // Redirecione para a página de perfil com uma mensagem de sucesso
+            }
 
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
 
-
-
+            return RedirectToAction("Perfil", "Home");  // Retorne à página de perfil com mensagens de erro
+        }
 
     }
 }

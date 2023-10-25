@@ -10,15 +10,6 @@
     <div class="templateDiv">
         <!-- Perfil de usuário comum-->
         <form asp-controller="Account" asp-action="EditProfile">
-            <div class="edit-field" data-field="Name">
-                <span class="field-value">@userName</span>
-                <input type="text" class="edit-input" value="@userName" name="field"/>
-                <button type="button" class="btn btn-config edit-button"><i class="fas fa-cog"></i></button> 
-                <input type="number" value="0" hidden name="fieldId"/>
-                <button type="submit" class=" btn save-button">Salvar</button>
-            </div>
-        </form>
-        <form asp-controller="Account" asp-action="EditProfile">
             <div class="edit-field" data-field="Email">
                 <span class="field-value">@userEmail</span>
                 <input type="text" class="edit-input" value="@userEmail" name="field" />
@@ -27,36 +18,48 @@
                 <button type="submit" class=" btn save-button">Salvar</button>
             </div>
         </form>
-        <!--
-        <form asp-controller="Account" asp-action="EditProfile">
+
+        <form asp-controller="Account" asp-action="ChangePassword">
             <div class="edit-field" data-field="Password">
-                <input type="password" class="edit-input" value="" name="field" />
+                <input type="password" class="edit-input" id="actual-password" value="SenhaAtual" name="CurrentPassword" readonly />
+                <button type="button" class="btn btn-config view-button"><i class="fas fa-eye"></i></button>
                 <button type="button" class="btn btn-config edit-button"><i class="fas fa-cog"></i></button>
-                <input type="number" value="2" hidden name="fieldId" />
-                <button type="submit" class=" btn save-button">Salvar</button>
+                <div id="new-password-fields" style="display:none">
+                    <input type="password" class="edit-input" placeholder="Nova Senha" name="NewPassword" />
+                    <input type="password" class="edit-input" placeholder="Confirmar Nova Senha" name="ConfirmNewPassword" />
+                </div>
+                <button type="submit" class=" btn save-button" style="display:none">Salvar</button>
             </div>
         </form>
-        -->
+        
     </div>
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('.edit-button').click(function () {
-                var field = $(this).closest('.edit-field');
-                field.toggleClass('editing');
-                $('.edit-field').not(field).addClass('disabled');
-
-                var isEditing = field.hasClass('editing');
-                field.find('.field-value').toggle(!isEditing);
-                field.find('.edit-input').toggle(isEditing);
-                field.find('.save-button').toggle(isEditing);
+            $('.view-button').click(function () {
+                var passwordField = $('#actual-password');
+                var type = passwordField.attr('type') === 'text' ? 'password' : 'text';
+                passwordField.attr('type', type);
+                $(this).html(type === 'text' ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>');
             });
 
+            $('.edit-button').click(function () {
+                var passwordField = $('#actual-password');
+                var newPassFields = $('#new-password-fields');
+                var saveButton = $('.save-button');
+
+                passwordField.prop('readonly', !passwordField.prop('readonly'));
+
+                if (newPassFields.is(':visible')) {
+                    newPassFields.hide();
+                    saveButton.hide();
+                } else {
+                    newPassFields.show();
+                    saveButton.show();
+                }
+            });
         });
-
-        // Adicione funções similares para outros campos que deseja permitir a edição
-
     </script>
 }

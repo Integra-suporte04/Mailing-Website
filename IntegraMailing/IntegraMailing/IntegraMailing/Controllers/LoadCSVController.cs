@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using IntegraMailing.Services;
 using System.Text.Json;
+using System.Linq;
 
 namespace IntegraMailing.Controllers
 {
@@ -47,11 +48,11 @@ namespace IntegraMailing.Controllers
                 Name = "No name",
                 user_name = await _userManager.GetEmailAsync(user),
                 Status = "Não iniciado",
-                Data_Sent = DateTime.Now
+                Data_Sent = DateTime.Now             
             };
 
             await SaveCampanha(campanha);
-            return await GetCampanhas();
+            return RedirectToAction("GetCampanhas"); 
 
         }
 
@@ -60,6 +61,16 @@ namespace IntegraMailing.Controllers
         public async Task<IActionResult> AtualizaLinha(IFormFile file,int linhaId)
         {
             await GetUserInfo();
+
+            int campanhaId = listaViewModel.LinhaLista[linhaId].Id;
+            var campanha = await _context.Campanhas.FindAsync(campanhaId);
+
+            if (campanha != null && campanha.InProgress)
+            {
+                // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
+                return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");
+            }
+            
 
             if (file != null && file.Length > 0)
             {
@@ -71,11 +82,10 @@ namespace IntegraMailing.Controllers
                     string line;
                     while((line = await reader.ReadLineAsync()) != null)
                     {
-                        numeros.Add(new tabela_mailing { numero = line, campanha_Id = listaViewModel.LinhaLista[linhaId].Id});
+                        numeros.Add(new tabela_mailing { numero = line, campanha_Id = campanhaId});
                         
                     }
                 }
-
 
                 Campanhas campanhas = new Campanhas
                 {
@@ -86,9 +96,9 @@ namespace IntegraMailing.Controllers
                 await UpdateCampanha(campanhas, listaViewModel.LinhaLista[linhaId].Id);
                 await AddMailing(numeros);
                 await StartMailing(listaViewModel.LinhaLista[linhaId].Id);
-                //await RunMailingScript();
+       
             }
-                return await GetCampanhas();
+                return RedirectToAction("GetCampanhas");
         }
 
         //Método para deletar as campanhas no banco de dados SQL
@@ -97,11 +107,21 @@ namespace IntegraMailing.Controllers
         {
             await GetUserInfo();
 
-            await DeleteCampanha(listaViewModel.LinhaLista[index].Id);
-            listaViewModel.LinhaLista.RemoveAt(index);
-            return await GetCampanhas();
-            //return View("~/Views/Home/Lista.cshtml", listaViewModel);
+            int campanhaId = listaViewModel.LinhaLista[index].Id;
 
+
+            var campanha = await _context.Campanhas.FindAsync(campanhaId);
+
+            if (campanha != null && campanha.InProgress)
+            {
+                // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
+                return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");
+            }
+            
+
+            await DeleteCampanha(campanhaId);
+            listaViewModel.LinhaLista.RemoveAt(index);
+            return RedirectToAction("GetCampanhas");
         }
 
         //Método para controle de paginas da View Lista (Cada página contém 6 registros de campanhas)
@@ -110,8 +130,7 @@ namespace IntegraMailing.Controllers
         {
             await GetUserInfo();
             listaViewModel.PaginaCounter = index;
-            return await GetCampanhas();
-            //return View("~/Views/Home/Lista.cshtml", listaViewModel);
+            return RedirectToAction("GetCampanhas");
         }
 
         //Método para pegar os dados do usuário que aparecem na barra de navegação lateral
@@ -143,39 +162,31 @@ namespace IntegraMailing.Controllers
         public async Task<IActionResult> StartMailing(int campanhaId)
         {
 
-           bool success = await _mailingService.StartMailing(campanhaId);
-
-            if(!success)
+            var campanha = await _context.Campanhas.FindAsync(campanhaId);
+            if (campanha == null || campanha.InProgress)
             {
-                return BadRequest("Uma campanha com o mesmo ID já está em execução.");
+                return BadRequest("A campanha já está em execução ou o ID é inválido.");
             }
+
+            campanha.InProgress = true;
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
 
         public void ExecuteScript(int campanhaId)
         {
+            _logger.LogInformation("Executando python com ID: " + campanhaId);
             var startInfo = new ProcessStartInfo
             {
                 FileName = "python3.8", // ou "python3" dependendo do seu sistema
-                Arguments = $"/home/validacao/Scripts/validaV2.py {campanhaId}",
+                Arguments = $"/home/validacao/Scripts/validar.py {campanhaId}",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
 
             using var process = Process.Start(startInfo);
-            /*
-            if (process != null)
-            {
-               process.WaitForExit();
-            }
-            else
-            {
-                _logger.Log(LogLevel.Debug, "Não foi possível iniciar o processo Python.");
-                throw new Exception("Não foi possível iniciar o processo Python.");
-            }
-            */
         }
 
         //Cria uma nova campanha ao acionar o método NovaLinha e salva essa campanha
@@ -253,6 +264,13 @@ namespace IntegraMailing.Controllers
             var userEmail = await _userManager.GetEmailAsync(user);
             listaViewModel.LinhaLista = await _context.Campanhas.Where(c => c.user_name == userEmail).ToListAsync();
 
+            if (user != null)
+            {
+                ViewData["AccountType"] = user.AccountType;
+                ViewData["UserEmail"] = user.Email;
+                ViewData["UserName"] = user.UserName;
+
+            }
 
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
 
@@ -263,6 +281,14 @@ namespace IntegraMailing.Controllers
  
             return Json(new {fileName = file.FileName});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckCampaignStatus()
+        {
+            bool isCampaignRunning = await _context.Campanhas.AnyAsync(c => c.InProgress);
+            return Json(new { IsRunning = isCampaignRunning });
+        }
+
 
     }
 

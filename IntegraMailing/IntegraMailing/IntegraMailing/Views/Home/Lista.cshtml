@@ -39,7 +39,7 @@
                     <div>@dateField</div>
                     <div>@statusField</div>
 
-                    <form asp-controller="LoadCSV" asp-action="AtualizaLinha" method="post" enctype="multipart/form-data">
+                    <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id ="form-atualiza-linha" method="post" enctype="multipart/form-data">
                         <label class="custom-file-upload">
                             <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
                             Carregar CSV
@@ -146,7 +146,7 @@
                 var inputElement = $(this);
 
                 $.ajax({
-                    url: '@Url.Action("SetFileName", "LoadCSV")',  // substitua 'GetFileName' e 'LoadCSV' pelos nomes reais do seu método e controlador
+                    url: '@Url.Action("SetFileName", "LoadCSV")',
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -159,8 +159,33 @@
                 });
             });
 
-        });
 
+            $.ajax({
+            url: '@Url.Action("CheckCampaignStatus", "LoadCSV")',  // substitua 'SeuController' pelo nome real do seu controlador
+            type: 'GET',
+            success: function (response) {
+                    console.log(response);
+                if (response.isRunning) {
+                    // Desabilitar os botões de lixeira e o input de arquivo se uma campanha estiver em andamento
+
+                    $('.btn-deletar, input[type=file]').prop('disabled', true).removeAttr('required');
+                }
+                else {
+                    $('.btn-deletar, input[type=file]').prop('disabled', false).attr('required', 'required');
+
+                }
+            }
+        });
+         });
+
+        
+
+        //  $('#form-atualiza-linha').submit(function (e) {
+        // // Desabilitar o botão de lixeira e o input de arquivo
+        // $(this).find('.btn-deletar, input[type=file]').prop('disabled', true);
+    });
+
+ 
 
     </script>
 }

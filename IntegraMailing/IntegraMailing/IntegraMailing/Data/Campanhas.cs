@@ -9,6 +9,10 @@ namespace IntegraMailing.Data
         public string? user_name { get; set; }
         public string? Status { get; set; }
         public DateTime Data_Sent { get; set; }
+        public int ExecutionCount { get; set; }
+        public bool InProgress { get; set; }
+        public bool Paused { get; set; }
+        public int Evolution { get; set; }
 
     }
 }
