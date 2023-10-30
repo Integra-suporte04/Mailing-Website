@@ -49,8 +49,10 @@
                         <button type="submit" class="btn-deletar"><i class="fas fa-play" style="color:green"></i></button>
                     </form>
 
-
-                    <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
+                    <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="linhaId" value="@i" />
+                        <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
+                    </form>
                     <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="index" value="@i" />
                         <button type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
@@ -63,7 +65,7 @@
                 <div id="extraContent-@i" class="extra-content">
                     <div colspan="4">
                         <div class="progress progress-striped">
-                            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                            <div class="progress-bar" role="progressbar" style="width: @Model.LinhaLista[i].Evolution%;" aria-valuenow="@Model.LinhaLista[i].Evolution" aria-valuemin="0" aria-valuemax="100">@Model.LinhaLista[i].Evolution %</div>
                         </div>
 
                     </div>
@@ -183,7 +185,7 @@
         //  $('#form-atualiza-linha').submit(function (e) {
         // // Desabilitar o botão de lixeira e o input de arquivo
         // $(this).find('.btn-deletar, input[type=file]').prop('disabled', true);
-    });
+   
 
  
 

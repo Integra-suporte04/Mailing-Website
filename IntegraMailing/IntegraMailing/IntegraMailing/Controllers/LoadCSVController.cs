@@ -19,18 +19,18 @@ namespace IntegraMailing.Controllers
         private readonly ILogger<LoadCSVController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
-        private readonly IMailingService _mailingService;
-        private ApplicationUser _currentUser;
+        private readonly IAccountService _accountService;
+        private readonly ICampaignService _campaingService;
      
 
-        public LoadCSVController(ILogger<LoadCSVController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser, ApplicationDbContext context, IMailingService mailingService)
+        public LoadCSVController(ILogger<LoadCSVController> logger, UserManager<ApplicationUser> userManager, ApplicationUser currentUser, ApplicationDbContext context, IAccountService accountService, ICampaignService campaingService)
         {
             _logger = logger;
             _userManager = userManager;
-            _currentUser = currentUser;
+
             _context = context;
-            _mailingService = mailingService;
-    
+            _accountService = accountService;
+            _campaingService = campaingService;
         }
 
         //Método para criar nova campanha e já salvar no banco de dados SQL
@@ -38,7 +38,7 @@ namespace IntegraMailing.Controllers
         public async Task<IActionResult> NovaLinha()
         {
             var user = await _userManager.GetUserAsync(User);
-            GetUserInfo(user);
+            _accountService.GetUserInfo(user, this);
 
             listaViewModel.MaxPaginaCounter = ((listaViewModel.LinhaLista.Count - 1) / 6) + 1;
 
@@ -48,7 +48,8 @@ namespace IntegraMailing.Controllers
                 Name = "No name",
                 user_name = await _userManager.GetEmailAsync(user),
                 Status = "Não iniciado",
-                Data_Sent = DateTime.Now             
+                Data_Sent = DateTime.Now,
+                Executed = false
             };
 
             await SaveCampanha(campanha);
@@ -60,15 +61,23 @@ namespace IntegraMailing.Controllers
         [HttpPost]
         public async Task<IActionResult> AtualizaLinha(IFormFile file,int linhaId)
         {
-            await GetUserInfo();
+            await _accountService.GetUserInfoAsync(this);
 
             int campanhaId = listaViewModel.LinhaLista[linhaId].Id;
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
-            if (campanha != null && campanha.InProgress)
+            if(campanha.Paused)
+            {
+                campanha.Paused = false;
+                campanha.Status = "Em progresso...";
+                await _context.SaveChangesAsync();
+                return RedirectToAction("GetCampanhas");
+
+            }
+            else if (campanha.Executed)
             {
                 // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
-                return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");
+                return BadRequest("A campanha está em execução ou já finalizou");
             }
             
 
@@ -87,16 +96,22 @@ namespace IntegraMailing.Controllers
                     }
                 }
 
-                Campanhas campanhas = new Campanhas
+                Campanhas campanhasInstance = new Campanhas
                 {
                     Name = file.FileName,
-                    Status = "Processando..."
+                    Status = "Enviado"
                 };
 
-                await UpdateCampanha(campanhas, listaViewModel.LinhaLista[linhaId].Id);
+                await UpdateCampanha(campanhasInstance, listaViewModel.LinhaLista[linhaId].Id);
                 await AddMailing(numeros);
-                await StartMailing(listaViewModel.LinhaLista[linhaId].Id);
-       
+                //await StartMailing(listaViewModel.LinhaLista[linhaId].Id);
+                ExecuteMailingScript(listaViewModel.LinhaLista[linhaId].Id);
+
+                campanha.Executed = true;
+                campanha.Paused = false;
+                campanha.Status = "Em Progresso...";
+                await _context.SaveChangesAsync();
+
             }
                 return RedirectToAction("GetCampanhas");
         }
@@ -105,14 +120,14 @@ namespace IntegraMailing.Controllers
         [HttpPost]
         public async Task<IActionResult> DeletaLinha(int index)
         {
-            await GetUserInfo();
+            await _accountService.GetUserInfoAsync(this);
 
             int campanhaId = listaViewModel.LinhaLista[index].Id;
 
 
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
-            if (campanha != null && campanha.InProgress)
+            if (campanha != null && campanha.Executed)
             {
                 // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
                 return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");
@@ -124,59 +139,74 @@ namespace IntegraMailing.Controllers
             return RedirectToAction("GetCampanhas");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PauseCampaign(int linhaId)
+        {
+            linhaId = listaViewModel.LinhaLista[linhaId].Id;
+
+            var campanha = await _context.Campanhas.FindAsync(linhaId);
+
+            if (campanha != null)
+            {
+                if(!campanha.Executed)
+                    return BadRequest("Campanha não pode ser pausada, pois não está em andamento");
+
+
+                campanha.Paused = !campanha.Paused;
+
+                if (campanha.Paused)
+                    campanha.Status = "Pausada";
+                else
+                    campanha.Status = "Em Progresso...";
+
+                _context.Campanhas.Update(campanha);
+            }
+
+            else
+                return NotFound();
+            
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("GetCampanhas");
+        }
         //Método para controle de paginas da View Lista (Cada página contém 6 registros de campanhas)
         [HttpPost]
         public async Task<IActionResult> TrocaPagina(int index)
         {
-            await GetUserInfo();
+            await _accountService.GetUserInfoAsync(this);
             listaViewModel.PaginaCounter = index;
             return RedirectToAction("GetCampanhas");
         }
 
-        //Método para pegar os dados do usuário que aparecem na barra de navegação lateral
-        private async Task GetUserInfo()
-        {
-            _currentUser = await _userManager.GetUserAsync(User);
-            if (_currentUser != null)
-            {
-                ViewData["AccountType"] = _currentUser.AccountType;
-                ViewData["UserEmail"] = _currentUser.Email;
-                ViewData["UserName"] = _currentUser.UserName;
-
-            }
-        }
-        //Sobrecarga do método GetUserInfo que já recebe um user e por isso não é async
-        private void GetUserInfo(ApplicationUser _currentUser)
-        {
-            
-            if (_currentUser != null)
-            {
-                ViewData["AccountType"] = _currentUser.AccountType;
-                ViewData["UserEmail"] = _currentUser.Email;
-                ViewData["UserName"] = _currentUser.UserName;
-
-            }
-        }
-
+        /*
         [HttpPost]
         public async Task<IActionResult> StartMailing(int campanhaId)
         {
 
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
+            Debug.WriteLine(campanha.Status);
+
             if (campanha == null || campanha.InProgress)
             {
                 return BadRequest("A campanha já está em execução ou o ID é inválido.");
             }
 
             campanha.InProgress = true;
+            campanha.Paused = false;
+            campanha.Status = "Enviado";
             await _context.SaveChangesAsync();
 
             return Ok();
         }
+        */
 
-        public void ExecuteScript(int campanhaId)
+        public void ExecuteMailingScript(int campanhaId)
         {
+      
             _logger.LogInformation("Executando python com ID: " + campanhaId);
+
+
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "python3.8", // ou "python3" dependendo do seu sistema
@@ -187,6 +217,8 @@ namespace IntegraMailing.Controllers
             };
 
             using var process = Process.Start(startInfo);
+
+
         }
 
         //Cria uma nova campanha ao acionar o método NovaLinha e salva essa campanha
@@ -263,6 +295,19 @@ namespace IntegraMailing.Controllers
 
             var userEmail = await _userManager.GetEmailAsync(user);
             listaViewModel.LinhaLista = await _context.Campanhas.Where(c => c.user_name == userEmail).ToListAsync();
+            var campanhasParaFinalizar = await _context.Campanhas
+    .Where(c => c.user_name == userEmail && c.Evolution == 100f && c.Status != "Finalizado")
+    .ToListAsync();
+
+
+            if (campanhasParaFinalizar.Any())
+            {
+                foreach (var campanha in campanhasParaFinalizar)
+                {
+                    campanha.Status = "Finalizado";
+                }
+                await _context.SaveChangesAsync();
+            }
 
             if (user != null)
             {
@@ -285,7 +330,7 @@ namespace IntegraMailing.Controllers
         [HttpGet]
         public async Task<IActionResult> CheckCampaignStatus()
         {
-            bool isCampaignRunning = await _context.Campanhas.AnyAsync(c => c.InProgress);
+            bool isCampaignRunning = await _context.Campanhas.AnyAsync(c => c.Status != "Finalizado" && c.Executed && !c.Paused);
             return Json(new { IsRunning = isCampaignRunning });
         }
 

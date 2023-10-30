@@ -21,14 +21,10 @@
 
         <form asp-controller="Account" asp-action="ChangePassword">
             <div class="edit-field" data-field="Password">
-                <input type="password" class="edit-input" id="actual-password" value="SenhaAtual" name="CurrentPassword" readonly />
-                <button type="button" class="btn btn-config view-button"><i class="fas fa-eye"></i></button>
+                <span class="field-value">******</span>
+                <input type="password" class="edit-input" name="NewPassword" placeholder="Nova Senha" style="display:none;" />
                 <button type="button" class="btn btn-config edit-button"><i class="fas fa-cog"></i></button>
-                <div id="new-password-fields" style="display:none">
-                    <input type="password" class="edit-input" placeholder="Nova Senha" name="NewPassword" />
-                    <input type="password" class="edit-input" placeholder="Confirmar Nova Senha" name="ConfirmNewPassword" />
-                </div>
-                <button type="submit" class=" btn save-button" style="display:none">Salvar</button>
+                <button type="submit" class="btn save-button" style="display:none;">Salvar</button>
             </div>
         </form>
         
@@ -38,28 +34,27 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('.view-button').click(function () {
-                var passwordField = $('#actual-password');
-                var type = passwordField.attr('type') === 'text' ? 'password' : 'text';
-                passwordField.attr('type', type);
-                $(this).html(type === 'text' ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>');
-            });
+            $('.btn-config').click(function () {
+                var field = $(this).closest('.edit-field');
+                var isEditing = field.hasClass('editing');
+                field.toggleClass('editing');
 
-            $('.edit-button').click(function () {
-                var passwordField = $('#actual-password');
-                var newPassFields = $('#new-password-fields');
-                var saveButton = $('.save-button');
-
-                passwordField.prop('readonly', !passwordField.prop('readonly'));
-
-                if (newPassFields.is(':visible')) {
-                    newPassFields.hide();
-                    saveButton.hide();
+                if (isEditing) {
+                    // Se estava em modo de edição, remova a classe 'disabled' dos outros campos
+                    $('.edit-field').not(field).removeClass('disabled');
                 } else {
-                    newPassFields.show();
-                    saveButton.show();
+                    // Se não estava em modo de edição, adicione a classe 'disabled' aos outros campos
+                    $('.edit-field').not(field).addClass('disabled');
                 }
+
+                // Atualiza o valor de isEditing após a mudança
+                isEditing = !isEditing;
+                field.find('.field-value').toggle(!isEditing);
+                field.find('.edit-input').toggle(isEditing);
+                field.find('.save-button').toggle(isEditing);
             });
         });
+
     </script>
 }
+

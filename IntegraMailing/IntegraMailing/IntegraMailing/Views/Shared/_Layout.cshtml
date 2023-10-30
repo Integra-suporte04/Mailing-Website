@@ -21,27 +21,29 @@
 <body>
     <header>
         <!--Barra de navegação superior-->
-        <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable-sm border-bottom box-shadow mb-3">
-            <div>
-                <button id="sidebarToggle">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-3">
+            <div class="container-fluid">
+                <button id="sidebarToggle" class="btn btn-outline-secondary me-2">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Validação de Mailing</a>
-            </div>
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Validação de Mailing</a>
 
-            <div class="navbar-icons">
-                <i class="fas fa-cog"></i> <!-- Ícone de engrenagem -->
-                <!-- <div class="notification">
-                        <i class="fas fa-envelope"></i>  Ícone de email 
-                     <span class="badge">0</span>  Número de notificações
-            </div> -->
-                <div class="notification">
-                    <i class="fas fa-bell"></i> <!-- Ícone de sino -->
-                    <span class="badge">0</span> <!-- Número de notificações -->
+                <div class="d-flex align-items-center ms-auto">
+                    <button class="btn btn-outline-secondary me-2" type="button">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="notification me-2 position-relative">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+                        </button>
+                    </div>
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <button type="submit" class="btn btn-outline-secondary">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </form>
                 </div>
-                <form method="post" asp-controller="Account" asp-action="Logout">
-                    <button type="submit" class="btn"><i class="fas fa-sign-out-alt"></i></button>
-                </form><!-- Ícone de logout -->
             </div>
         </nav>
     </header>

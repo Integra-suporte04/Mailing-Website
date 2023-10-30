@@ -34,7 +34,10 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 builder.Services.AddSingleton<IMailingService, MailingService>();
-//builder.Services.AddHostedService(sp => sp.GetRequiredService<IMailingService>() as MailingService);
+builder.Services.AddHostedService(sp => sp.GetRequiredService<IMailingService>() as MailingService);
+builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<LoadCSVController>();
 var app = builder.Build();

@@ -2,6 +2,8 @@
 using IntegraMailing.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Reflection;
 using System.Text.Json;
 
 namespace IntegraMailing.Services
@@ -27,32 +29,56 @@ namespace IntegraMailing.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            /*
             using (var scopeFac = _scopeFactory.CreateScope())
             {
                 var dbContext = scopeFac.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 while (!stoppingToken.IsCancellationRequested)
                 {
+                    //System.Diagnostics.Debug.WriteLine("EXECUTANDO LOOP");
                     if (DateTime.Now.Hour >= 8 && DateTime.Now.Hour < 18)
                     {
-                        var campanhasEmExecucao = await dbContext.Campanhas
-                            .Where(c => c.InProgress && !c.Paused)
-                            .ToListAsync(stoppingToken);
+                        var campanhasEmExecucao = await dbContext.Campanhas.ToListAsync(stoppingToken);
 
                         foreach (var campanha in campanhasEmExecucao)
                         {
-                            // Logica de execução de campanha
-                            using (var scope = _serviceProvider.CreateScope())
+                            if (campanha.Status == "Finalizado")
+                                continue;
+                            else if (campanha.Evolution == 100)
                             {
-                                _logger.LogInformation("Mailing será iniciado");
-                                var controller = scope.ServiceProvider.GetRequiredService<LoadCSVController>();
-                                controller.ExecuteScript(campanha.Id);
-                                _logger.LogInformation("Mailing executado... aguardando");
-
-                                // Após a execução do script, atualizar o estado
-                                campanha.ExecutionCount++;
-                                campanha.InProgress = true;  // ou false, conforme a lógica desejada
+                                campanha.Status = "Finalizado";
+                                campanha.InProgress = false;
                                 await dbContext.SaveChangesAsync(stoppingToken);
+                                continue;  // Skip the rest of the loop for this campaign
                             }
+
+                                System.Diagnostics.Debug.WriteLine("Veio até antes do pause");
+                            if (campanha.Paused)
+                                continue;
+
+                                System.Diagnostics.Debug.WriteLine(campanha.Status + " " + campanha.InProgress);
+
+                            if(campanha.Status == "Enviado" && campanha.InProgress)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Entrou aqui");
+
+                                using (var scope = _serviceProvider.CreateScope())
+                                {
+
+                                    campanha.Status = "Em Progresso...";
+                                System.Diagnostics.Debug.WriteLine("Entrou aqui tbm");
+                                    _logger.LogInformation("Mailing será iniciado");
+                                    var controller = scope.ServiceProvider.GetRequiredService<LoadCSVController>();
+                                    controller.ExecuteScript(campanha.Id);
+                                    _logger.LogInformation("Mailing executado... aguarde");
+
+                                    // Após a execução do script, atualizar o estado
+                                    //campanha.ExecutionCount++;
+                                    await dbContext.SaveChangesAsync(stoppingToken);
+                                }
+                            }
+                            
+ 
                         }
                     }
 
@@ -60,7 +86,7 @@ namespace IntegraMailing.Services
                     await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
                 }
             }
-           
+           */
         }
 
         public async Task<bool> StartMailing(int campanhaId)
@@ -74,7 +100,7 @@ namespace IntegraMailing.Services
                     return false;
                 }
 
-                campanha.InProgress = true;
+                campanha.Executed = true;
                 await dbContext.SaveChangesAsync();
 
                 return true;
@@ -91,5 +117,25 @@ namespace IntegraMailing.Services
     {
         Task<bool> StartMailing(int campanhaId);
     }
+    //public enum MailingStatus
+    //{
+    //    [Description("Enviado")]
+    //    Enviado,
+    //    [Description("Em Progresso...")]
+    //    EmProgresso,
+    //    [Description("Pausado")]
+    //    Pausado,
+    //    [Description("Finalizado")]
+    //    Finalizado
 
+    //}
+    //public static class MailingStatusExtension
+    //{
+    //    public static string ToDescriptionString(this MailingStatus status)
+    //    {
+    //        FieldInfo field = status.GetType().GetField(status.ToString());
+    //        DescriptionAttribute attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+    //        return attribute == null ? status.ToString() : attribute.Description;
+    //    }
+    //}
 }

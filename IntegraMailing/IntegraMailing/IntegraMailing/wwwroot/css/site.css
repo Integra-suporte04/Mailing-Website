@@ -21,12 +21,14 @@ body {
     box-shadow: none !important;
 }
 .templateDiv {
-    padding: 1%;
+    padding: 2%;
     width: 100%;
     height: auto;
     max-height: contain;
     background-color: white;
-    border: 1px dotted black;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
 }
 
 .templateItem {

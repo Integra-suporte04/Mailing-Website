@@ -134,32 +134,42 @@ namespace IntegraMailing.Controllers
             return RedirectToAction("Perfil", "Home");
         }
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string CurrentPassword, string NewPassword, string ConfirmNewPassword)
+        public async Task<IActionResult> ChangePassword(string NewPassword)
         {
-            if (NewPassword != ConfirmNewPassword)
+
+            if (string.IsNullOrWhiteSpace(NewPassword))
             {
-                ModelState.AddModelError(string.Empty, "As senhas não correspondem.");
-                return RedirectToAction("Perfil", "Home");  // Retorne à página de perfil com uma mensagem de erro
+                ModelState.AddModelError(string.Empty, "A nova senha não pode estar vazia.");
+                return View();  // ou outro tratamento de erro
             }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return RedirectToAction("SignIn");  // Se o usuário não estiver logado, redirecione para a página de login
+                ModelState.AddModelError(string.Empty, "Usuário não encontrado.");
+                return View();  // ou outro tratamento de erro
             }
 
-            var result = await _userManager.ChangePasswordAsync(user, CurrentPassword, NewPassword);
-            if (result.Succeeded)
+            // Remove a senha atual (se houver)
+            var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+            if (!removePasswordResult.Succeeded)
             {
-                return RedirectToAction("Perfil", "Home");  // Redirecione para a página de perfil com uma mensagem de sucesso
+                // Handle errors (log, show error message to user, etc.)
+                // Você pode querer logar ou lidar com quaisquer erros aqui
+                return BadRequest("Erro ao alterar senha. Remover a senha atual falhou");  // ou outro tratamento de erro
             }
 
-            foreach (var error in result.Errors)
+            // Adiciona a nova senha
+            var addPasswordResult = await _userManager.AddPasswordAsync(user, NewPassword);
+            if (!addPasswordResult.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                // Handle errors (log, show error message to user, etc.)
+                // Você pode querer logar ou lidar com quaisquer erros aqui
+                return BadRequest("Erro ao alterar senha. Adicionar a nova senha falhou, favor contactar o suporte");  // ou outro tratamento de erro
             }
 
-            return RedirectToAction("Perfil", "Home");  // Retorne à página de perfil com mensagens de erro
+            // Se chegou aqui, a operação foi bem-sucedida
+            return RedirectToAction("Perfil", "Home");
         }
 
     }
