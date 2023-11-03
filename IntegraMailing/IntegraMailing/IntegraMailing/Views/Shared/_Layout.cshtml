@@ -21,25 +21,26 @@
 <body>
     <header>
         <!--Barra de navegação superior-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-3">
+        <nav class="navbar navbar-expand-lg shadow-sm mb-3">
             <div class="container-fluid">
                 <button id="sidebarToggle" class="btn btn-outline-secondary me-2">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Validação de Mailing</a>
+                <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Validação de Mailing</a>
 
                 <div class="d-flex align-items-center ms-auto">
-                    <button class="btn btn-outline-secondary me-2" type="button">
+                    <button class="btn btn-outline-light me-2" type="button">
                         <i class="fas fa-cog"></i>
                     </button>
                     <div class="notification me-2 position-relative">
-                        <button class="btn btn-outline-secondary" type="button">
+                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
+
+                        <button class="btn btn-outline-light" type="button">
                             <i class="fas fa-bell"></i>
-                            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
                         </button>
                     </div>
                     <form method="post" asp-controller="Account" asp-action="Logout">
-                        <button type="submit" class="btn btn-outline-secondary">
+                        <button type="submit" class="btn btn-outline-light">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
                     </form>
@@ -53,8 +54,6 @@
             <!-- Barra de navegação lateral -->
             <div class="container-fluid open" id="sidebar">
                 <div class="container sidebar-info">
-
- 
                     <div class="user-container">
                         <div class="user-large">
                             <img src="/assets/userIcon.png" alt="Imagem de Usuário" class="img-circle" /> <!--Imagem do usuário-->
@@ -98,15 +97,16 @@
                     </div>
                 </div>
 
-                <!--
+                
                 <div class="menu-group">
                     <button class="toggle-button">&#x2714; Resultados</button>
                     <div class="options">
-                        <button class="option-button">Status Final</button>
-                        <button class="option-button">Analítico</button>
+                        <button class="option-button">
+                            <a class="text-decoration-none text-black text-lg-start" asp-area="" asp-controller="Home" asp-action="Resultados"><i class="fas fa-arrow-right"></i> Campanhas</a>
+                        </button>
                     </div>
                 </div>
-                -->
+                
                 
             </div>
                 <div id="mainContent" class="">

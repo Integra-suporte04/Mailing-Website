@@ -34,13 +34,17 @@ a {
 
 
 .navbar {
-    background-color: #607D8B;
+    background: linear-gradient(45deg,#455A64,#607D8B);
     height: 8vh;
-    z-index:10;
+    z-index: 10;
     border: none !important;
 }
+.navbar i {
+    color:white;
+
+}
 .navbar-brand{
-    margin-left:10px;
+    margin-left: 10px;
 }
 
 .navbar-icons {

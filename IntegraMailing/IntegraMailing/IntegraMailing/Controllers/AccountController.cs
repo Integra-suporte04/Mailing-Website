@@ -81,15 +81,18 @@ namespace IntegraMailing.Controllers
         {
             if (ModelState.IsValid)
             {
-                Debug.WriteLine(model.Email.GetType());
+                Debug.WriteLine("model is valid");
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 
                 if (user != null)
                 {
+                    Debug.WriteLine("BeforeResult");
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+                    Debug.WriteLine(result);
                     if (result.Succeeded)
                     {
-                        Debug.WriteLine(User.Identity.IsAuthenticated);
+                        Debug.WriteLine("Authenticated: "+User.Identity.IsAuthenticated);
+                        Debug.WriteLine("Remember me: "+model.RememberMe);
                         return RedirectToAction("Index", "Home");  // Redirecionar para a página inicial ou a página desejada
                     }
                     
@@ -98,6 +101,7 @@ namespace IntegraMailing.Controllers
                 {
                    Debug.WriteLine("user is null!");
                 }
+                Debug.WriteLine("Failed attempt");
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 

@@ -45,7 +45,7 @@ namespace IntegraMailing.Services
         public async Task DeleteCampaign(int id)
         {
             var campaign = await _context.Campanhas.FindAsync(id);
-            var finishedNumbers = _context.mailing_finalizado.Where(m => m.campanha_Id == id);
+            var finishedNumbers = _context.mailing_finalizado.Where(m => m.campanha_id == id);
             var mailingNumbers = _context.tabela_mailing.Where(m => m.campanha_Id == id);
             if (campaign == null)
             {

@@ -46,6 +46,15 @@ namespace IntegraMailing.Controllers
             return RedirectToAction("GetCampanhas", "LoadCSV");
             //return View("~/Views/Home/Lista.cshtml", listaViewModel);
         }
+        [Authorize]
+        public IActionResult Resultados()
+        {
+            
+            GetUserInfo(_currentUser);
+            return RedirectToAction("GetCampanhas", "ResultadoCampanha");
+
+        }
+        [Authorize]
         public async Task<IActionResult> Perfil()
         {
             // _logger.LogInformation("Página Listas foi acessada.");

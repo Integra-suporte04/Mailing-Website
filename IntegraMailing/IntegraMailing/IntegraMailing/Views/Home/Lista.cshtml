@@ -39,24 +39,45 @@
                     <div>@dateField</div>
                     <div>@statusField</div>
 
-                    <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id ="form-atualiza-linha" method="post" enctype="multipart/form-data">
-                        <label class="custom-file-upload">
-                            <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
-                            Carregar CSV
-                        </label>
 
-                        <input type="hidden" name="linhaId" value="@i" />
-                        <button type="submit" class="btn-deletar"><i class="fas fa-play" style="color:green"></i></button>
+                    <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id="form-atualiza-linha" method="post" enctype="multipart/form-data">
+                        @if(!Model.LinhaLista[i].Executed)
+                        {
+                            <label class="custom-file-upload">
+                                <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
+                                Carregar CSV
+                            </label>
+                        }
+                        @if(Model.LinhaLista[i].Paused || !Model.LinhaLista[i].Executed)
+                        {
+                            <input type="hidden" name="linhaId" value="@i" />
+                            <button type="submit" class="btn-deletar"><i class="fas fa-play" style="color:green"></i></button>
+                        }
+                        
                     </form>
 
-                    <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="linhaId" value="@i" />
-                        <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
-                    </form>
-                    <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="index" value="@i" />
-                        <button type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
-                    </form>
+                    
+                    @if(Model.LinhaLista[i].Executed && !Model.LinhaLista[i].Paused && Model.LinhaLista[i].Evolution < 100)
+                    {
+                        <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="linhaId" value="@i" />
+                            <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
+                        </form>
+                    }
+
+                    @if (!Model.LinhaLista[i].Executed || (Model.LinhaLista[i].Executed && Model.LinhaLista[i].Paused) || Model.LinhaLista[i].Evolution==100)
+                    {
+                        <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="index" value="@i" />
+                            <button type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
+                        </form>
+                    }
+
+
+                    <button class="btn-deletar" onclick="location.href='@Url.Action("GetCampanhas", "LoadCSV")'">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                    
 
                     <button class="btn expand-button" data-target="#extraContent-@i"><i class="fa-solid fa-chevron-down"></i></button>
 

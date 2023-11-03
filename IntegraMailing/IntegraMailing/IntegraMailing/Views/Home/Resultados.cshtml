@@ -1,0 +1,164 @@
+﻿@using IntegraMailing.Data
+@model List<Campanhas>
+@{
+    ViewData["Title"] = "Resultados das Campanhas";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+    <style>
+        #resultsTable {
+            width: 95%;
+            margin: auto;
+            border-collapse: separate;
+            border-spacing: 0 15px; /* Espaçamento vertical entre as linhas */
+        }
+
+            #resultsTable thead th {
+                padding: 10px 5px;
+                color: black;
+            }
+
+            #resultsTable tbody tr {
+                height: 90px; /* Ajuste conforme necessário */
+                transition: background-color 0.3s, box-shadow 0.3s;
+                border: 1.5px solid gray;
+                border-radius: 20px; /* Bordas arredondadas */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+                
+            }
+
+                #resultsTable tbody tr:hover {
+                    background-color: #e2e8f0;
+                    cursor: pointer;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada ao passar o mouse */
+                }
+
+                #resultsTable tbody tr td {
+                    padding: 10px 11px;
+                    border: none; /* Remova as bordas das células individuais */
+                    background: transparent; /* Fundo transparente para que a borda arredondada e a sombra do tr sejam visíveis */
+                }
+
+                    #resultsTable tbody tr td:first-child {
+                        border-top-left-radius: 10px;
+                        border-bottom-left-radius: 10px;
+                    }
+
+                    #resultsTable tbody tr td:last-child {
+                        border-top-right-radius: 10px;
+                        border-bottom-right-radius: 10px;
+                    }
+    </style>
+}
+
+
+<h4 class="page-title" style="display:flex; align-items:center;"><button class="btn">&#127968;</button>Resultados >> Campanhas</h4>
+
+<!-- Barra de pesquisa e filtros -->
+<form id="filterForm" asp-controller="ResultadoCampanha" asp-action="GetCampanhasFilter" method="post" enctype="multipart/form-data">
+<div class="d-flex flex-column flex-md-row mb-3">
+    <div class="mb-2 mb-md-0 mr-md-2">
+        <label for="searchName">Pesquisa:</label>
+        <input type="search" class="form-control" placeholder="Pesquisar por nome" id="searchName" name="searchName">
+    </div>
+    <div class="mb-2 mb-md-0 mr-md-2">
+        <label for="startDate">Data de Início:</label>
+        <input type="date" class="form-control" id="startDate" placeholder="A partir de" name="startDate">
+    </div>
+    <div class="mb-2 mb-md-0 mr-md-2">
+        <label for="endDate">Data de Fim:</label>
+        <input type="date" class="form-control" id="endDate" placeholder="Até" name="endDate">
+    </div>
+    <div>
+        <label for="statusFilter">Status:</label>
+            <select class="form-control" id="statusFilter" name="statusFilter">
+            <option value="">Selecione o status</option>
+            <option value="Em Progresso...">Enviada</option>
+            <option value="Em Progresso...">Em Progresso</option>
+            <option value="Pausada">Pausada</option>
+            <option value="Finalizada">Finalizada</option>
+        </select>
+    </div>
+        <button type="submit" class="btn btn-primary btn-block" >Aplicar Filtros</button>
+
+</div>
+</form>
+
+<!-- Tabela de resultados -->
+<table id="resultsTable" class="display">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Data de publicação da campanha</th>
+            <th>Status</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            var backgroundColor = i % 2 == 0 ? "background-color: #a0aec0;" : "background-color: white;";
+            <tr style="@backgroundColor">
+                <td>
+                    <form method="post" asp-action="GetMailings" asp-controller="ResultadoCampanha">
+                        <input type="hidden" name="campanhaId" value="@Model[i].Id" />
+                        <button type="submit" class="btn btn-link text-left" style="width:100%;">@Model[i].Name</button>
+                    </form>
+                </td>
+                <!-- <td>@Model[i].Name</td>-->
+                <td>@Model[i].Data_Sent.ToString("dd/MM/yyyy")</td>
+                <td>@Model[i].Status</td>
+ 
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#filterForm").on("submit", function (event) {
+                event.preventDefault();  // Prevenindo o comportamento padrão de submissão do formulário
+
+                var formData = $(this).serialize();  // Serialize os dados do formulário
+
+                $.ajax({
+                    url: '@Url.Action("GetCampanhasFilter", "ResultadoCampanha")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        console.log(data);
+                        updateTable(data);  // Atualize a tabela com os novos dados
+                    }
+                });
+            });
+        });
+
+        function updateTable(data) {
+            // Obtenha o token anti-falsificação do servidor
+            $.get('@Url.Action("GetAntiForgeryToken", "ResultadoCampanha")', function (token) {
+                var tbody = $("#resultsTable tbody");
+                tbody.empty();  // Limpa o corpo da tabela
+
+                $.each(data, function (index, campanha) {
+                    var backgroundColor = index % 2 == 0 ? "background-color: #a0aec0;" : "background-color: white;";
+                    var rowHtml = `
+                                    <tr style="${backgroundColor}">
+                                        <td>
+                                            <form method="post" action="/ResultadoCampanha/GetMailings">
+                                                <input type="hidden" name="__RequestVerificationToken" value="${token}" />
+                                                <input type="hidden" name="campanhaId" value="${campanha.id}" />
+                                                <button type="submit" class="btn btn-link text-left" style="width:100%;">${campanha.name}</button>
+                                            </form>
+                                        </td>
+                                        <td>${new Date(campanha.data_Sent).toLocaleDateString()}</td>
+                                        <td>${campanha.status}</td>
+                                    </tr>`;
+                    $('#resultsTable tbody').append(rowHtml);   // Adiciona a nova linha ao corpo da tabela
+                });
+            });
+        }
+    </script>
+}

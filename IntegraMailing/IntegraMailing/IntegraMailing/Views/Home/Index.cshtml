@@ -13,63 +13,74 @@
         height: 100%;
     }
 
-        .index-main img {
-            height: 30%;
-            width: 65%;
-        }
+    .admin-container {
+        max-width: 600px;
+        margin: auto;
+    }
 
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+    }
 </style>
+
 <div class="text-center index-main">
-
-    @if(accountType == "Admin")
+    @if (accountType == "Admin")
     {
-        <div class="container">
-            <h3>Edição de modo administrador</h3>
-            <form asp-controller="Home" asp-action="ApplyUserToEnterprise">
-                <div class="form-group mb-4">
-                    <label for="empresa">Selecionar Empresa:</label>
-                    <select id="empresa" name="empresaId" class="form-control">
-                        @if (Model != null && Model.empresas.Any())
-                        {
-                            foreach (var empresa in Model.empresas)
-                            {
-                                <option value="@empresa.Nome">@empresa.Nome</option>
-                            }
-                        }
-                        else
-                        {
-                            <option value="">Sem Registros</option>
-                        }
-                    </select>
-                    <input type="text" id="nomeUsuario" name="nomeUsuario" placeholder="Digite o nome do usuário" class="form-control" required />
+        <div class="admin-container">
+            <h3 class="mb-4">Modo Administrador</h3>
 
-                    <button id="atribuirUsuarioBtn" type="submit" disabled class="btn btn-primary">Atribuir Usuário</button>
-                </div>
-            </form>
-            <form asp-controller="Home" asp-action="CreateEmpresa">
-                <div class="form-group">
-                    <label for="nome">Nome da Empresa:</label>
-                    <input type="text" id="nomeEmp" name="nomeEmpresa" class="form-control" required />
-                </div>
-                <button type="submit" class="btn btn-primary" disabled id="criarEmpresaBtn">Criar Empresa</button>
-            </form>
+            <!-- Atribuir Usuário a Empresa -->
+            <div class="mb-4">
+                <h5 class="mb-3">Atribuir Usuário a Empresa</h5>
+                <form asp-controller="Home" asp-action="ApplyUserToEnterprise">
+                    <div class="form-group">
+                        <label for="empresa">Selecionar Empresa:</label>
+                        <select id="empresa" name="empresaId" class="form-control">
+                            @if (Model != null && Model.empresas.Any())
+                            {
+                                foreach (var empresa in Model.empresas)
+                                {
+                                    <option value="@empresa.Nome">@empresa.Nome</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="">Sem Registros</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="nomeUsuario" name="nomeUsuario" placeholder="Digite o nome do usuário" class="form-control" required />
+                    </div>
+                    <button id="atribuirUsuarioBtn" type="submit" disabled class="btn btn-primary btn-block">Atribuir Usuário</button>
+                </form>
+            </div>
+
+            <!-- Criar Empresa -->
+            <div>
+                <h5 class="mb-3">Criar Empresa</h5>
+                <form asp-controller="Home" asp-action="CreateEmpresa">
+                    <div class="form-group">
+                        <input type="text" id="nomeEmp" name="nomeEmpresa" placeholder="Nome da Empresa" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" disabled id="criarEmpresaBtn">Criar Empresa</button>
+                </form>
+            </div>
         </div>
     }
-    else
-    {   
-        <img src="~/assets/issabel_logo_mini.png" alt="Logo Integra Sistema" />  
-    }
-
 </div>
 
 @section Scripts{
     <script>
-
         document.getElementById('nomeEmp').addEventListener('input', function () {
-            document.getElementById('criarEmpresaBtn').disabled = !this.value;
+            document.getElementById('criarEmpresaBtn').disabled = !this.value.trim();
         });
         document.getElementById('nomeUsuario').addEventListener('input', function () {
-            document.getElementById('atribuirUsuarioBtn').disabled = !this.value;
+            document.getElementById('atribuirUsuarioBtn').disabled = !this.value.trim();
         });
     </script>
 }

@@ -1,0 +1,81 @@
+﻿@using IntegraMailing.Data
+@model List<MailingFinalizado>
+
+@{
+    ViewData["Title"] = "Resultados do Mailing";
+}
+@section Styles {
+    <style>
+        #mailingsTable {
+            width: 95%;
+            margin: auto;
+            border-collapse: separate;
+            border-spacing: 0 15px; /* Espaçamento vertical entre as linhas */
+        }
+
+            #mailingsTable thead th {
+                padding: 10px 5px;
+                color: black;
+            }
+
+            #mailingsTable tbody tr {
+                height: 90px; /* Ajuste conforme necessário */
+                transition: background-color 0.3s, box-shadow 0.3s;
+                border: 1.5px solid gray;
+                border-radius: 20px; /* Bordas arredondadas */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+            }
+
+                #mailingsTable tbody tr:hover {
+                    background-color: #e2e8f0;
+                    /*cursor: pointer;*/
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada ao passar o mouse */
+                }
+
+                #mailingsTable tbody tr td {
+                    padding: 10px 11px;
+                    border: none; /* Remova as bordas das células individuais */
+                    background: transparent; /* Fundo transparente para que a borda arredondada e a sombra do tr sejam visíveis */
+                }
+
+                    #mailingsTable tbody tr td:first-child {
+                        border-top-left-radius: 10px;
+                        border-bottom-left-radius: 10px;
+                    }
+
+                    #mailingsTable tbody tr td:last-child {
+                        border-top-right-radius: 10px;
+                        border-bottom-right-radius: 10px;
+                    }
+    </style>
+}
+<h4 class="page-title" style="display:flex; align-items:center;">
+    <button class="btn" onclick="location.href='@Url.Action("Resultados", "Home")'">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    Resultados >> Campanhas >> Mailings
+    <button class="btn ml-auto" onclick="location.href='@Url.Action("ExportarCsv", "ResultadoCampanha", new {campanhaId = Model[0].campanha_id})'">Exportar como CSV</button>
+</h4>
+<table id="mailingsTable" class="display">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Status</th>
+            <th>Hora da Tentativa 1</th>
+            <th>Hora da Tentativa 2</th>
+            <th>Hora da Tentativa 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mailing in Model)
+        {
+            <tr>
+                <td>@mailing.numero</td>
+                <td>@mailing.status</td>
+                <td>@mailing.hora_tentativa_1</td>
+                <td>@mailing.hora_tentativa_2</td>
+                <td>@mailing.hora_tentativa_3</td>
+            </tr>
+        }
+    </tbody>
+</table>

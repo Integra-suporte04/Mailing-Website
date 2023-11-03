@@ -47,7 +47,7 @@ namespace IntegraMailing.Controllers
             {
                 Name = "No name",
                 user_name = await _userManager.GetEmailAsync(user),
-                Status = "Não iniciado",
+                Status = "Não iniciada",
                 Data_Sent = DateTime.Now,
                 Executed = false
             };
@@ -99,7 +99,7 @@ namespace IntegraMailing.Controllers
                 Campanhas campanhasInstance = new Campanhas
                 {
                     Name = file.FileName,
-                    Status = "Enviado"
+                    Status = "Enviada"
                 };
 
                 await UpdateCampanha(campanhasInstance, listaViewModel.LinhaLista[linhaId].Id);
@@ -251,7 +251,7 @@ namespace IntegraMailing.Controllers
         public async Task<IActionResult> DeleteCampanha(int id)
         {
             var campanha = await _context.Campanhas.FindAsync(id);
-            var numeros_finalizados = _context.mailing_finalizado.Where(m => m.campanha_Id == id);
+            var numeros_finalizados = _context.mailing_finalizado.Where(m => m.campanha_id == id);
             var numeros_mailing = _context.tabela_mailing.Where(m => m.campanha_Id == id);
             if (campanha == null)
             {
@@ -291,12 +291,13 @@ namespace IntegraMailing.Controllers
         //Sempre que este método é acionado, a página é recarregada
         public async Task<IActionResult> GetCampanhas()
         {
+            Debug.WriteLine("Chamou o getcampanhas");
             var user = await _userManager.GetUserAsync(User);
 
             var userEmail = await _userManager.GetEmailAsync(user);
             listaViewModel.LinhaLista = await _context.Campanhas.Where(c => c.user_name == userEmail).ToListAsync();
             var campanhasParaFinalizar = await _context.Campanhas
-    .Where(c => c.user_name == userEmail && c.Evolution == 100f && c.Status != "Finalizado")
+    .Where(c => c.user_name == userEmail && c.Evolution == 100f && c.Status != "Finalizada")
     .ToListAsync();
 
 
@@ -304,7 +305,7 @@ namespace IntegraMailing.Controllers
             {
                 foreach (var campanha in campanhasParaFinalizar)
                 {
-                    campanha.Status = "Finalizado";
+                    campanha.Status = "Finalizada";
                 }
                 await _context.SaveChangesAsync();
             }
@@ -330,7 +331,10 @@ namespace IntegraMailing.Controllers
         [HttpGet]
         public async Task<IActionResult> CheckCampaignStatus()
         {
-            bool isCampaignRunning = await _context.Campanhas.AnyAsync(c => c.Status != "Finalizado" && c.Executed && !c.Paused);
+            var user = await _userManager.GetUserAsync(User);
+            var userEmail = await _userManager.GetEmailAsync(user);
+
+            bool isCampaignRunning = await _context.Campanhas.AnyAsync(c => c.Status != "Finalizada" && c.Executed && !c.Paused && c.user_name == userEmail);
             return Json(new { IsRunning = isCampaignRunning });
         }
 
