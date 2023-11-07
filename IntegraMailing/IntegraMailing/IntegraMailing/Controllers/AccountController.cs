@@ -27,6 +27,10 @@ namespace IntegraMailing.Controllers
         }
         public IActionResult SignIn()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -75,44 +79,40 @@ namespace IntegraMailing.Controllers
 
         }
 
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Login(SignInModel model)
         {
             if (ModelState.IsValid)
             {
-                Debug.WriteLine("model is valid");
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 
                 if (user != null)
                 {
-                    Debug.WriteLine("BeforeResult");
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
-                    Debug.WriteLine(result);
+
                     if (result.Succeeded)
                     {
-                        Debug.WriteLine("Authenticated: "+User.Identity.IsAuthenticated);
-                        Debug.WriteLine("Remember me: "+model.RememberMe);
                         return RedirectToAction("Index", "Home");  // Redirecionar para a página inicial ou a página desejada
-                    }
-                    
+                    }                
                 }
-                else
-                {
-                   Debug.WriteLine("user is null!");
-                }
-                Debug.WriteLine("Failed attempt");
+
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
 
             return RedirectToAction("SignIn");
+
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
-            return RedirectToAction("SignIn", "Account");
+            //await HttpContext.SignOutAsync();
+            await _signInManager.SignOutAsync();
+            //HttpContext.Session.Clear();
+            Debug.WriteLine(User.Identity.IsAuthenticated);
+            return RedirectToAction("SignIn");
+            return View("~/Views/Account/SignIn.cshtml");
         }
         [HttpPost]
         public async Task<IActionResult> EditProfile(string field, int fieldId)

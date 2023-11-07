@@ -4,7 +4,7 @@
 } 
 
 <div class="container-fluid">
-    <h4 class="page-title" style="display:flex; align-items:center;"><button class="btn">&#127968;</button>Campanhas >> Listas</h4>
+    <h4 class="page-title" style="display:flex; align-items:center;"><button onclick="location.href='@Url.Action("Index", "Home")'" class="btn">&#127968;</button>Campanhas >> Listas</h4>
     
     <div class="templateDiv">
 
@@ -31,7 +31,7 @@
                 string backgroundColor = (i % 2 == 0) ? "lightgray" : "white";
 
                 string? nameField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Name : "Nome";
-                DateTime dateField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Data_Sent : DateTime.Now;
+                DateTime? dateField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Data_Sent : DateTime.Now;
                 string? statusField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Status : "Sem arquivo";
 
                 <div id="coluna-@i" class="coluna" style="background-color:@backgroundColor;">
@@ -183,22 +183,22 @@
             });
 
 
-            $.ajax({
-            url: '@Url.Action("CheckCampaignStatus", "LoadCSV")',  // substitua 'SeuController' pelo nome real do seu controlador
-            type: 'GET',
-            success: function (response) {
-                    console.log(response);
-                if (response.isRunning) {
-                    // Desabilitar os botões de lixeira e o input de arquivo se uma campanha estiver em andamento
+        //     $.ajax({
+        //     url: '@Url.Action("CheckCampaignStatus", "LoadCSV")',  // substitua 'SeuController' pelo nome real do seu controlador
+        //     type: 'GET',
+        //     success: function (response) {
+        //             console.log(response);
+        //         if (response.isRunning) {
+        //             // Desabilitar os botões de lixeira e o input de arquivo se uma campanha estiver em andamento
 
-                    $('.btn-deletar, input[type=file]').prop('disabled', true).removeAttr('required');
-                }
-                else {
-                    $('.btn-deletar, input[type=file]').prop('disabled', false).attr('required', 'required');
+        //             $('.btn-deletar, input[type=file]').prop('disabled', true).removeAttr('required');
+        //         }
+        //         else {
+        //             $('.btn-deletar, input[type=file]').prop('disabled', false).attr('required', 'required');
 
-                }
-            }
-        });
+        //         }
+        //     }
+        // });
          });
 
         

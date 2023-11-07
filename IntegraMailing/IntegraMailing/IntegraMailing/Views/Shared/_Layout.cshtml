@@ -21,7 +21,7 @@
 <body>
     <header>
         <!--Barra de navegação superior-->
-        <nav class="navbar navbar-expand-lg shadow-sm mb-3">
+        <nav class="navbar navbar-expand-lg shadow-sm">
             <div class="container-fluid">
                 <button id="sidebarToggle" class="btn btn-outline-secondary me-2">
                     <i class="fas fa-bars"></i>
@@ -49,72 +49,71 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main">
-            <!-- Barra de navegação lateral -->
-            <div class="container-fluid open" id="sidebar">
-                <div class="container sidebar-info">
-                    <div class="user-container">
-                        <div class="user-large">
-                            <img src="/assets/userIcon.png" alt="Imagem de Usuário" class="img-circle" /> <!--Imagem do usuário-->
-                        </div>
+    
+    <main role="main" id="mainDiv">
+        <!-- Barra de navegação lateral -->
+        <div class="container-fluid open" id="sidebar">
+            <div class="container sidebar-info">
+                <div class="user-container">
+                    <div class="user-large">
+                        <img src="/assets/userIcon.png" alt="Imagem de Usuário" class="img-circle" /> <!--Imagem do usuário-->
+                    </div>
                         
-                            @if (accountType == "Admin")
-                            {
-                                <div class="user-small">
-                                    <img src="/assets/enterprise.png" alt="Imagem de Empresa" /> <!--Imagem da empresa-->
-                                </div>
-                            }                                                     
-                    </div>
-
-                    <div class="profile-data">
-                        <div class="info">
-                            <h6>@userName</h6> <!-- Nome do usuário e empresa -->
-                            <p>@userEmail</p> <!-- Email do usuário -->
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn profile-button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down" style="color:white;"></i>
-                            </button> <!-- Botão para expandir opções -->
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a asp-area="" asp-controller="Home" asp-action="Perfil" class="dropdown-item">Perfil</a>
-                                <a class="dropdown-item" href="#">Notificações</a>
-                                <a class="dropdown-item" href="#">Recarregar</a>
+                        @if (accountType == "Admin")
+                        {
+                            <div class="user-small">
+                                <img src="/assets/enterprise.png" alt="Imagem de Empresa" /> <!--Imagem da empresa-->
                             </div>
+                        }                                                     
+                </div>
+
+                <div class="profile-data">
+                    <div class="info">
+                        <h6>@userName</h6> <!-- Nome do usuário e empresa -->
+                        <p>@userEmail</p> <!-- Email do usuário -->
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn profile-button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-chevron-down" style="color:white;"></i>
+                        </button> <!-- Botão para expandir opções -->
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a asp-area="" asp-controller="Home" asp-action="Perfil" class="dropdown-item">Perfil</a>
+                            <a class="dropdown-item" href="#">Notificações</a>
+                            <a class="dropdown-item" href="#">Recarregar</a>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Grupos e opções de cada grupo no menu lateral -->
-
-                <div class="menu-group">
-                    <button class="toggle-button">&#x1F4DE; Campanhas</button>
-                    <div class="options">
-                        <button class="option-button">
-                            <a class="text-decoration-none text-black text-lg-start" asp-area="" asp-controller="Home" asp-action="Lista"><i class="fas fa-arrow-right"></i> Listas</a>
-                        </button>
-                    </div>
-                </div>
-
-                
-                <div class="menu-group">
-                    <button class="toggle-button">&#x2714; Resultados</button>
-                    <div class="options">
-                        <button class="option-button">
-                            <a class="text-decoration-none text-black text-lg-start" asp-area="" asp-controller="Home" asp-action="Resultados"><i class="fas fa-arrow-right"></i> Campanhas</a>
-                        </button>
-                    </div>
-                </div>
-                
-                
             </div>
-                <div id="mainContent" class="">
-                @RenderBody() <!-- Renderização dinâmica de páginas -->
-                </div>
-        </main>
-    </div>
 
+            <!-- Grupos e opções de cada grupo no menu lateral -->
+
+            <div class="menu-group">
+                <button class="toggle-button">&#x1F4DE; Campanhas</button>
+                <div class="options">
+                    <button class="option-button">
+                        <a class="text-decoration-none text-black text-lg-start" asp-area="" asp-controller="Home" asp-action="Lista"><i class="fas fa-arrow-right"></i> Listas</a>
+                    </button>
+                </div>
+            </div>
+
+                
+            <div class="menu-group">
+                <button class="toggle-button">&#x2714; Resultados</button>
+                <div class="options">
+                    <button class="option-button">
+                        <a class="text-decoration-none text-black text-lg-start" asp-area="" asp-controller="Home" asp-action="Resultados"><i class="fas fa-arrow-right"></i> Campanhas</a>
+                    </button>
+                </div>
+            </div>
+                
+                
+        </div>
+            <div id="mainContent" class="">
+            @RenderBody() <!-- Renderização dinâmica de páginas -->
+            </div>
+    </main>
+    
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - Integra Sistema
@@ -127,6 +126,39 @@
     <script src="https://kit.fontawesome.com/cfec620395.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        function toggleSidebar(open) {
+            var sidebar = document.getElementById('sidebar'); // Seleciona o elemento pelo ID
+            if (sidebar) {
+                if (open) {
+                    sidebar.classList.add('open');
+                } else {
+                    sidebar.classList.remove('open');
+                }
+            }
+        }
+
+        // Defina a largura mínima da tela para a lógica de alternância
+        var minWidth = 1000;
+
+        // Função para lidar com a alteração do tamanho da janela
+        function handleWindowResize() {
+            var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            if (width < minWidth) {
+                // Desativa a classe .open se a largura da tela for menor que minWidth
+                toggleSidebar(false);
+            } else {
+                // Reativa a classe .open se a largura da tela for maior que minWidth
+                toggleSidebar(true);
+            }
+        }
+
+        // Adicione o ouvinte de eventos ao redimensionar a janela
+        window.addEventListener('resize', handleWindowResize);
+
+        // Chame a função imediatamente para definir o estado inicial baseado no tamanho atual da tela
+        handleWindowResize();
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

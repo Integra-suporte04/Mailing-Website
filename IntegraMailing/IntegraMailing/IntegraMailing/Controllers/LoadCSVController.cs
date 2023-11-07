@@ -42,7 +42,6 @@ namespace IntegraMailing.Controllers
 
             listaViewModel.MaxPaginaCounter = ((listaViewModel.LinhaLista.Count - 1) / 6) + 1;
 
-
             Campanhas campanha = new Campanhas
             {
                 Name = "No name",
@@ -127,7 +126,7 @@ namespace IntegraMailing.Controllers
 
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
-            if (campanha != null && campanha.Executed)
+            if (campanha != null && campanha.Executed && campanha.Evolution < 100f)
             {
                 // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
                 return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");

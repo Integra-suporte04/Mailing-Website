@@ -53,7 +53,7 @@
 }
 
 
-<h4 class="page-title" style="display:flex; align-items:center;"><button class="btn">&#127968;</button>Resultados >> Campanhas</h4>
+<h4 class="page-title" style="display:flex; align-items:center;"><button onclick="location.href='@Url.Action("Index", "Home")'"  class="btn">&#127968;</button>Resultados >> Campanhas</h4>
 
 <!-- Barra de pesquisa e filtros -->
 <form id="filterForm" asp-controller="ResultadoCampanha" asp-action="GetCampanhasFilter" method="post" enctype="multipart/form-data">
@@ -107,7 +107,7 @@
                     </form>
                 </td>
                 <!-- <td>@Model[i].Name</td>-->
-                <td>@Model[i].Data_Sent.ToString("dd/MM/yyyy")</td>
+                <td>@Model[i].Data_Sent.Value.ToString("dd/MM/yyyy")</td>
                 <td>@Model[i].Status</td>
  
             </tr>

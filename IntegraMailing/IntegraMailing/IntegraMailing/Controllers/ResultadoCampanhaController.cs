@@ -83,9 +83,8 @@ namespace IntegraMailing.Controllers
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
             if (campanha == null || campanha.user_name != userEmail)
-            {
                 return Forbid(); // ou return NotFound(); dependendo de como você quer lidar com isso
-            }
+
 
             var mailings = await _context.mailing_finalizado.Where(m => m.campanha_id == campanhaId).ToListAsync();
 
