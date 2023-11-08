@@ -78,16 +78,24 @@ namespace IntegraMailing.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetMailings(int campanhaId)
         {
-            var userEmail = User.Identity.Name; // Asumindo que o email do usuário é o identificador
+            var user = await _userManager.GetUserAsync(User);
+            var userEmail = await _userManager.GetEmailAsync(user);
 
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
             if (campanha == null || campanha.user_name != userEmail)
-                return Forbid(); // ou return NotFound(); dependendo de como você quer lidar com isso
+                return Forbid();
 
 
             var mailings = await _context.mailing_finalizado.Where(m => m.campanha_id == campanhaId).ToListAsync();
 
+            if (user != null)
+            {
+                ViewData["AccountType"] = user.AccountType;
+                ViewData["UserEmail"] = user.Email;
+                ViewData["UserName"] = user.UserName;
+
+            }
 
             return View("~/Views/Home/ResultadosMailing.cshtml", mailings);
         }
@@ -117,7 +125,7 @@ namespace IntegraMailing.Controllers
                 var horaTentativa2String = mailing.hora_tentativa_2?.ToString("dd/MM/yyyy HH:mm:ss") ?? "";
                 var horaTentativa3String = mailing.hora_tentativa_3?.ToString("dd/MM/yyyy HH:mm:ss") ?? "";
 
-                stringBuilder.AppendLine($"{mailing.numero};{mailing.status};{horaTentativa1String};{horaTentativa2String};{horaTentativa3String}");
+                stringBuilder.AppendLine($"{mailing.numero};{mailing.statusFinal};{horaTentativa1String};{horaTentativa2String};{horaTentativa3String}");
             }
 
             return stringBuilder.ToString();

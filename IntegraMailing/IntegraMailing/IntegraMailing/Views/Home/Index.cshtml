@@ -70,6 +70,37 @@
                     <button type="submit" class="btn btn-primary btn-block" disabled id="criarEmpresaBtn">Criar Empresa</button>
                 </form>
             </div>
+            <!-- Criar Conta de Usuário -->
+            <div>
+                <h5 class="mb-3">Criar Usuário</h5>
+                <form id="accountForm" method="post" asp-controller="Account" asp-action="Register">
+                    <!--Define qual função será utilizado e qual controller-->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" name="email" id="email" required>
+                        <span id="emailError" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmEmail">Confirmar Email</label>
+                        <input type="email" class="form-control" name="confirmEmail" id="confirmEmail" required>
+                        <span id="confirmEmailError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass">Senha</label>
+                        <input type="password" class="form-control" name="pass" id="pass" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPass">Confirmar Senha</label>
+                        <input type="password" class="form-control" name="confirmPass" id="confirmPass" required>
+                        <span id="passwordError" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary">Criar conta</button><!--Envia os dados do formulário para o banco de dados e registra o usuário-->
+                    </div>
+                </form>
+            </div>
         </div>
     }
 </div>
@@ -82,5 +113,23 @@
         document.getElementById('nomeUsuario').addEventListener('input', function () {
             document.getElementById('atribuirUsuarioBtn').disabled = !this.value.trim();
         });
+
+        $('#accountForm').on('submit', function (e) {
+            var email = $('#email').val();
+            var confirmEmail = $('#confirmEmail').val();
+            var password = $('#pass').val();
+            var confirmPassword = $('#confirmPass').val();
+
+            var isEmailMatching = (email === confirmEmail);
+            var isPasswordMatching = (password === confirmPassword);
+
+            $('#confirmEmailError').text(isEmailMatching ? '' : 'Os emails não coincidem');
+            $('#passwordError').text(isPasswordMatching ? '' : 'As senhas não coincidem');
+
+            if (!isEmailMatching || !isPasswordMatching) {
+                e.preventDefault();
+            }
+        });
+
     </script>
 }
