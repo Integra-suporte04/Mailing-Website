@@ -1,5 +1,5 @@
-﻿@using IntegraMailing.Data
-@model List<MailingFinalizado>
+﻿@using IntegraMailing.Controllers
+@model MailingResults
 
 @{
     ViewData["Title"] = "Resultados do Mailing";
@@ -47,19 +47,88 @@
                         border-top-right-radius: 10px;
                         border-bottom-right-radius: 10px;
                     }
+
+        /* CSS */
+        #btn-export {
+            appearance: button;
+            background-color: #1B9B45;
+            background-image: linear-gradient(180deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, 0));
+            border: 1px solid #1B9B45;
+            border-radius: 1rem;
+            box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset,rgba(46, 54, 80, 0.075) 0 1px 1px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: Inter,sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+            padding: .5rem 1rem;
+            text-align: center;
+            text-transform: none;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+        }
+
+            #btn-export:focus:not(:focus-visible),
+            #btn-export:focus {
+            outline: 0;
+        }
+
+            #btn-export:hover {
+                background-color: #1B9B60;
+                border-color: #1B9B60;
+        }
+
+            #btn-export:focus {
+                background-color: #1B9B60;
+                border-color: #1B9B60;
+            box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0 inset, rgba(46, 54, 80, 0.075) 0 1px 1px, rgba(104, 101, 235, 0.5) 0 0 0 .2rem;
+        }
+
+            #btn-export:active {
+                background-color: #1B9B60;
+            background-image: none;
+                border-color: #1B9B60;
+            box-shadow: rgba(46, 54, 80, 0.125) 0 3px 5px inset;
+        }
+
+                #btn-export:active:focus {
+                box-shadow: rgba(46, 54, 80, 0.125) 0 3px 5px inset, rgba(104, 101, 235, 0.5) 0 0 0 .2rem;
+            }
+
+            #btn-export:disabled {
+            background-image: none;
+            box-shadow: none;
+            opacity: .65;
+            pointer-events: none;
+        }
     </style>
 }
-<h4 class="page-title" style="display:flex; align-items:center;">
-    <button class="btn" onclick="location.href='@Url.Action("Resultados", "Home")'">
-        <i class="fas fa-arrow-left"></i>
-    </button>
-    Resultados >> Campanhas >> Mailings
-        @if(Model.Count > 0)
-        {
-    <button class="btn ml-auto" onclick="location.href='@Url.Action("ExportarCsv", "ResultadoCampanha", new {campanhaId = Model[0].campanha_id})'">Exportar como CSV</button>
-        }
+<h4 class="page-title" style="display:flex; justify-content:space-between;">
+    <div style="display:flex; width:100%;">
+        <div style="flex:7;">
+            <button class="btn" onclick="location.href='@Url.Action("Resultados", "Home")'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+
+            <span> Resultados >> Campanhas >> Mailings</span>
+        </div>
+        <div style="display:flex; justify-content:center; flex:3;">
+            @if(Model.MailingsFinalizados.Count > 0)
+            {
+            <button id="btn-export" class="btn ml-auto" onclick="location.href='@Url.Action("ExportarCsv", "ResultadoCampanha", new {campanhaId = Model.MailingsFinalizados[0].campanha_id})'"><i class="fa-solid fa-file-export"></i> Exportar como CSV</button>
+            }
+        </div>
+    </div>
 </h4>
 <table id="mailingsTable" class="display">
+
     <thead>
         <tr>
             <th>Número</th>
@@ -73,14 +142,14 @@
         </tr>
     </thead>
     <tbody>
-        @if(Model.Count < 1)
+        @if(Model.MailingsFinalizados.Count < 1)
         {
-            <h2>Ainda não existem mailings finalizados para a campanha selecionada</h2>
+            <h3 style="text-align:center; color:darkred">Ainda não existem mailings finalizados para a campanha selecionada</h3>
         }
         else
 
         {
-            @foreach (var mailing in Model)
+            @foreach (var mailing in Model.MailingsFinalizados)
             {
                 <tr>
                     <td>@mailing.numero</td>
@@ -97,3 +166,33 @@
 
     </tbody>
 </table>
+
+<div class="pagina-info">
+    Mostrando @((10 * Model.PaginaCounter) - 9) a @((10 * Model.PaginaCounter < Model.MailingsFinalizados.Count) ? (10 * Model.PaginaCounter) : (Model.MailingsFinalizados.Count)) de @Model.MailingsFinalizados.Count resultados
+</div>
+
+<!-- Botões de navegação de página -->
+<div class="paginacao">
+    @{
+
+        int firstPage = 0;
+
+        if (Model.PaginaCounter >= 3)
+            firstPage = Model.PaginaCounter - 2;
+        else
+            firstPage = 1;
+
+            
+
+        @for (int i = firstPage; i <= Model.MaxPaginaCounter && i <= firstPage + 4; i++)
+        {
+           
+            var btnClass = (i == Model.PaginaCounter) ? "btn-pagina btn-pagina-selecionada" : "btn-pagina";
+            <form asp-controller="ResultadoCampanha" asp-action="TrocaPagina" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="index" value="@i" />
+                <button class="@btnClass">@i</button>
+            </form>
+        }
+
+    }
+</div>

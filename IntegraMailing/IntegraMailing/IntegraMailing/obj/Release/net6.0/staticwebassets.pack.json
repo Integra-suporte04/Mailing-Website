@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\IntegraMailing.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\wwwroot\\assets\\IntegraLogo_bg.jpg",
+      "PackagePath": "staticwebassets\\assets\\IntegraLogo_bg.jpg"
+    },
+    {
       "Id": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\wwwroot\\assets\\enterprise.png",
       "PackagePath": "staticwebassets\\assets\\enterprise.png"
     },
@@ -19,10 +23,6 @@
     {
       "Id": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\wwwroot\\assets\\userIcon.png",
       "PackagePath": "staticwebassets\\assets\\userIcon.png"
-    },
-    {
-      "Id": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\wwwroot\\css\\Index.css",
-      "PackagePath": "staticwebassets\\css\\Index.css"
     },
     {
       "Id": "C:\\Users\\Usuário\\Desktop\\Mailing-Website\\IntegraMailing\\IntegraMailing\\IntegraMailing\\wwwroot\\css\\ListaStyle.css",

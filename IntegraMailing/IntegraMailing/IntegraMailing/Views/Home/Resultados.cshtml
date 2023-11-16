@@ -9,7 +9,7 @@
     <style>
         #resultsTable {
             width: 95%;
-            margin: auto;
+            margin: auto; 
             border-collapse: separate;
             border-spacing: 0 15px; /* Espaçamento vertical entre as linhas */
         }
@@ -17,6 +17,7 @@
             #resultsTable thead th {
                 padding: 10px 5px;
                 color: black;
+                text-align:center;
             }
 
             #resultsTable tbody tr {
@@ -36,8 +37,9 @@
 
                 #resultsTable tbody tr td {
                     padding: 10px 11px;
-                    border: none; /* Remova as bordas das células individuais */
-                    background: transparent; /* Fundo transparente para que a borda arredondada e a sombra do tr sejam visíveis */
+                    border: none;
+                    background: transparent;
+                    text-align:center;
                 }
 
                     #resultsTable tbody tr td:first-child {
@@ -49,6 +51,50 @@
                         border-top-right-radius: 10px;
                         border-bottom-right-radius: 10px;
                     }
+
+
+
+        .btn-filter {
+            background-color: #e1ecf4;
+            border-radius: 3px;
+            border: 1px solid #7aa7c7;
+            box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+            box-sizing: border-box;
+            color: #39739d;
+            cursor: pointer;
+            display: inline-block;
+            font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.15385;
+            margin: 0;
+            outline: none;
+            padding: 8px .8em;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: baseline;
+            white-space: nowrap;
+        }
+
+            .btn-filter:hover,
+            .btn-filter:focus {
+            background-color: #b3d3ea;
+            color: #2c5777;
+        }
+
+            .btn-filter:focus {
+            box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+        }
+
+        .btn-filter:active {
+            background-color: #a0c7e4;
+            box-shadow: none;
+            color: #2c5777;
+        }
     </style>
 }
 
@@ -57,7 +103,7 @@
 
 <!-- Barra de pesquisa e filtros -->
 <form id="filterForm" asp-controller="ResultadoCampanha" asp-action="GetCampanhasFilter" method="post" enctype="multipart/form-data">
-<div class="d-flex flex-column flex-md-row mb-3">
+<div class="d-flex flex-column flex-md-row mb-3" style="margin-left:2%; justify-content:space-between; margin-right:2%;">
     <div class="mb-2 mb-md-0 mr-md-2">
         <label for="searchName">Pesquisa:</label>
         <input type="search" class="form-control" placeholder="Pesquisar por nome" id="searchName" name="searchName">
@@ -79,9 +125,11 @@
             <option value="Pausada">Pausada</option>
             <option value="Finalizada">Finalizada</option>
         </select>
-    </div>
-        <button type="submit" class="btn btn-primary btn-block" >Aplicar Filtros</button>
+    </div>     
+</div>
 
+<div style="display:flex; justify-content:center; width:100%;">
+        <button type="submit" class="btn btn-block btn-filter">Aplicar Filtros</button>
 </div>
 </form>
 
@@ -99,17 +147,15 @@
         @for (var i = 0; i < Model.Count; i++)
         {
             var backgroundColor = i % 2 == 0 ? "background-color: #a0aec0;" : "background-color: white;";
-            <tr style="@backgroundColor">
+            <tr style="@backgroundColor" onclick="submitForm(@i)">
                 <td>
-                    <form method="post" asp-action="GetMailings" asp-controller="ResultadoCampanha">
+                    <form id="form-@i" method="post" asp-action="GetMailings" asp-controller="ResultadoCampanha">
                         <input type="hidden" name="campanhaId" value="@Model[i].Id" />
-                        <button type="submit" class="btn btn-link text-left" style="width:100%;">@Model[i].Name</button>
+                        <button type="submit" class="btn text-left" style="width:100%;">@Model[i].Name</button>
                     </form>
                 </td>
-                <!-- <td>@Model[i].Name</td>-->
                 <td>@Model[i].Data_Sent.Value.ToString("dd/MM/yyyy")</td>
                 <td>@Model[i].Status</td>
- 
             </tr>
         }
     </tbody>
@@ -118,7 +164,12 @@
 @section Scripts
 {
     <script>
+        function submitForm(index) {
+            document.getElementById('form-' + index).submit();
+        }
         $(document).ready(function () {
+
+
             $("#filterForm").on("submit", function (event) {
                 event.preventDefault();  // Prevenindo o comportamento padrão de submissão do formulário
 
@@ -140,25 +191,37 @@
             // Obtenha o token anti-falsificação do servidor
             $.get('@Url.Action("GetAntiForgeryToken", "ResultadoCampanha")', function (token) {
                 var tbody = $("#resultsTable tbody");
-                tbody.empty();  // Limpa o corpo da tabela
+                tbody.empty(); // Limpa o corpo da tabela
 
                 $.each(data, function (index, campanha) {
                     var backgroundColor = index % 2 == 0 ? "background-color: #a0aec0;" : "background-color: white;";
+
                     var rowHtml = `
-                                    <tr style="${backgroundColor}">
-                                        <td>
-                                            <form method="post" action="/ResultadoCampanha/GetMailings">
-                                                <input type="hidden" name="__RequestVerificationToken" value="${token}" />
-                                                <input type="hidden" name="campanhaId" value="${campanha.id}" />
-                                                <button type="submit" class="btn btn-link text-left" style="width:100%;">${campanha.name}</button>
-                                            </form>
-                                        </td>
-                                        <td>${new Date(campanha.data_Sent).toLocaleDateString()}</td>
-                                        <td>${campanha.status}</td>
-                                    </tr>`;
-                    $('#resultsTable tbody').append(rowHtml);   // Adiciona a nova linha ao corpo da tabela
+                        <tr style="${backgroundColor}" data-index="${index}">
+                            <td>
+                                <form id="form-${index}" method="post" action="/ResultadoCampanha/GetMailings">
+                                    <input type="hidden" name="__RequestVerificationToken" value="${token}" />
+                                    <input type="hidden" name="campanhaId" value="${campanha.id}" />
+                                    <button type="button" class="btn text-left" style="width:100%;">${campanha.name}</button>
+                                </form>
+                            </td>
+                            <td>${new Date(campanha.data_Sent).toLocaleDateString()}</td>
+                            <td>${campanha.status}</td>
+                        </tr>`;
+
+                    tbody.append(rowHtml); // Adiciona a nova linha ao corpo da tabela
+                });
+
+                // Vincule o evento de clique após adicionar todas as linhas
+                tbody.children('tr').on('click', function () {
+                    var index = $(this).data('index'); // Usa o atributo data-index para identificar o formulário
+                    submitForm(index);
                 });
             });
+        }
+
+        function submitForm(index) {
+            document.getElementById('form-' + index).submit();
         }
     </script>
 }

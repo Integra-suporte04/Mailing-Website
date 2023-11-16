@@ -9,13 +9,14 @@
     <div class="templateDiv">
 
         <div class="coluna-titulos">
-            <div class="titulo-coluna">Nome</div>
-            <div class="titulo-coluna">Data</div>
-            <div class="titulo-coluna">Status</div>
-
-
+            <div id="titulos">
+                <div class="titulo-coluna">Nome</div>
+                <div class="titulo-coluna">Data</div>
+                <div class="titulo-coluna">Status</div>
+            </div>
+            <div id="botao-nova-linha"></div>
             <form asp-controller="LoadCSV" asp-action="NovaLinha" method="post" enctype="multipart/form-data">
-                <button id="btnNew" type="submit"><i class="fas fa-plus" style="color:green;margin-right:6%;"></i>  Nova</button>
+                <button id="btnNew" type="submit"><i class="fas fa-plus" style="color:green;margin-right:6%;"></i>  Nova Campanha</button>
             </form>
 
 
@@ -34,59 +35,75 @@
                 DateTime? dateField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Data_Sent : DateTime.Now;
                 string? statusField = (Model.LinhaLista.Count > i) ? Model.LinhaLista[i].Status : "Sem arquivo";
 
+                if (nameField.Length > 8)
+                    nameField = nameField.Substring(0, 8) + "...";
+
                 <div id="coluna-@i" class="coluna" style="background-color:@backgroundColor;">
-                    <div>@nameField</div>
-                    <div>@dateField</div>
-                    <div>@statusField</div>
+                    <div id="campos-campanha">
+                        <div>@nameField</div>
+                        <div>@dateField</div>
+                        <div>@statusField</div>
+                    </div>
 
+                    <div id="botoes-campanha">
+                       
+                    
+                        <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id="form-atualiza-linha" method="post" enctype="multipart/form-data">
+                            @if(!Model.LinhaLista[i].Executed)
+                            {
+                                <div class="upload-buttons">
 
-                    <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id="form-atualiza-linha" method="post" enctype="multipart/form-data">
-                        @if(!Model.LinhaLista[i].Executed)
-                        {
-                            <label class="custom-file-upload">
-                                <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
-                                Carregar CSV
-                            </label>
-                        }
-                        @if(Model.LinhaLista[i].Paused || !Model.LinhaLista[i].Executed)
-                        {
-                            <input type="hidden" name="linhaId" value="@i" />
-                            <button type="submit" class="btn-deletar"><i class="fas fa-play" style="color:green"></i></button>
-                        }
-                        
-                    </form>
+                                    <label class="custom-file-upload">
+                                        <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
+                                        Carregar CSV
+                                    </label>
+                                    
+                                    <input type="hidden" name="linhaId" value="@i" />
+                                    <button type="submit" class="btn-play"><i class="fas fa-play" style="color:green"></i></button>
+                                    
+                                </div>
+                            }
+                            else if(Model.LinhaLista[i].Paused)
+                            {
+                                <input type="hidden" name="linhaId" value="@i" />
+                                <button type="submit" class="btn-play"><i class="fas fa-play" style="color:green"></i></button>
+                            }
+
+                        </form>
 
                     
-                    @if(Model.LinhaLista[i].Executed && !Model.LinhaLista[i].Paused && Model.LinhaLista[i].Evolution < 100)
-                    {
-                        <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="linhaId" value="@i" />
-                            <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
-                        </form>
-                    }
+                        @if(Model.LinhaLista[i].Executed && !Model.LinhaLista[i].Paused && Model.LinhaLista[i].Evolution < 100)
+                        {
+                            <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="linhaId" value="@i" />
+                                <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
+                            </form>
+                        }
 
-                    @if (!Model.LinhaLista[i].Executed || (Model.LinhaLista[i].Executed && Model.LinhaLista[i].Paused) || Model.LinhaLista[i].Evolution==100)
-                    {
-                        <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="index" value="@i" />
-                            <button type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
-                        </form>
-                    }
+                        @if (!Model.LinhaLista[i].Executed || (Model.LinhaLista[i].Executed && Model.LinhaLista[i].Paused) || Model.LinhaLista[i].Evolution==100)
+                        {
+                            <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="index" value="@i" />
+                                <button type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
+                            </form>
+                        }
 
 
-                    <button class="btn-deletar" onclick="location.href='@Url.Action("GetCampanhas", "LoadCSV")'">
-                        <i class="fas fa-sync"></i>
-                    </button>
+                        <button class="btn-deletar" onclick="location.href='@Url.Action("GetCampanhas", "LoadCSV")'">
+                            <i class="fas fa-sync"></i>
+                        </button>
                     
 
-                    <button class="btn expand-button" data-target="#extraContent-@i"><i class="fa-solid fa-chevron-down"></i></button>
+                        <button class="btn expand-button" data-target="#extraContent-@i"><i class="fa-solid fa-chevron-down"></i></button>
 
+                    </div>
                 </div>
-
                 <div id="extraContent-@i" class="extra-content">
                     <div colspan="4">
                         <div class="progress progress-striped">
-                            <div class="progress-bar" role="progressbar" style="width: @Model.LinhaLista[i].Evolution%;" aria-valuenow="@Model.LinhaLista[i].Evolution" aria-valuemin="0" aria-valuemax="100">@Model.LinhaLista[i].Evolution %</div>
+                            <div class="progress-bar" role="progressbar" style="width: @Model.LinhaLista[i].Evolution%;" aria-valuenow="@Model.LinhaLista[i].Evolution" aria-valuemin="0" aria-valuemax="100">
+                                <div style="width 50%;"> <b>Etapa da Validação: @Model.LinhaLista[i].ExecutionCount</b> / Progresso: @Model.LinhaLista[i].Evolution % </div>
+                                </div>
                         </div>
 
                     </div>
@@ -110,13 +127,14 @@
 
 
 
-                    @for (int i = firstPage; i <= Model.MaxPaginaCounter && i <= firstPage + 4; i++)
+                        @for (int i = firstPage; i <= Model.MaxPaginaCounter && i <= firstPage + 4; i++)
                     {
+                        System.Diagnostics.Debug.WriteLine(Model.MaxPaginaCounter);
                         var btnClass = (i == Model.PaginaCounter) ? "btn-pagina btn-pagina-selecionada" : "btn-pagina";
-                        <form asp-controller="LoadCSV" asp-action="TrocaPagina" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="index" value="@i" />
-                            <button class="@btnClass">@i</button>
-                        </form>
+                            <form asp-controller="LoadCSV" asp-action="TrocaPagina" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="index" value="@i" />
+                                <button class="@btnClass">@i</button>
+                            </form>
                     }
 
                 }
@@ -177,14 +195,16 @@
                     success: function (response) {
                         // Atualizar o DOM com o nome do arquivo
                         var fileName = response.fileName;
-                         $('#coluna-' + index).find('div:first').text(fileName);
+                        if (fileName.length > 8)
+                            fileName = fileName.substring(0, 8) + "...";
+                         $('#coluna-' + index).find('div:first').find('div:first').text(fileName);
                     }
                 });
             });
 
 
         //     $.ajax({
-        //     url: '@Url.Action("CheckCampaignStatus", "LoadCSV")',  // substitua 'SeuController' pelo nome real do seu controlador
+        //     url: '@Url.Action("CheckCampaignStatus", "LoadCSV")',  
         //     type: 'GET',
         //     success: function (response) {
         //             console.log(response);

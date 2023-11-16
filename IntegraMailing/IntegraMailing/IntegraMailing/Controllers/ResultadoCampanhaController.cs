@@ -14,6 +14,7 @@ namespace IntegraMailing.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IAntiforgery _antiforgery;
+        public static  MailingResults mailingResults;
         public ResultadoCampanhaController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IAntiforgery antiforgery)
         {
             _userManager = userManager;
@@ -88,7 +89,11 @@ namespace IntegraMailing.Controllers
 
 
             var mailings = await _context.mailing_finalizado.Where(m => m.campanha_id == campanhaId).ToListAsync();
+            //int paginaCounter = mailings.Count; 
+            int maxPaginaCounter = mailings.Count % 10 == 0 ? mailings.Count / 10 : (mailings.Count / 10) + 1;
 
+            mailingResults = new MailingResults { MaxPaginaCounter = maxPaginaCounter, MailingsFinalizados = mailings, PaginaCounter = 1 };
+            
             if (user != null)
             {
                 ViewData["AccountType"] = user.AccountType;
@@ -97,7 +102,16 @@ namespace IntegraMailing.Controllers
 
             }
 
-            return View("~/Views/Home/ResultadosMailing.cshtml", mailings);
+            return View("~/Views/Home/ResultadosMailing.cshtml", mailingResults);
+        }
+
+        [HttpPost]
+        public IActionResult TrocaPagina(int index)
+        {
+            if(mailingResults.MailingsFinalizados != null)
+                mailingResults.PaginaCounter = index;
+
+            return View("~/Views/Home/ResultadosMailing.cshtml", mailingResults);
         }
 
         public IActionResult ExportarCsv(int campanhaId)
@@ -117,7 +131,7 @@ namespace IntegraMailing.Controllers
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble()));
-            stringBuilder.AppendLine("Número;Status;Hora da Tentativa 1;Hora da Tentativa 2;Hora da Tentativa 3");  // header line
+            stringBuilder.AppendLine("Número;Status 1;Hora da Tentativa 1;Status 2;Hora da Tentativa 2;Status 3;Hora da Tentativa 3;Status Final");  // header line
 
             foreach (var mailing in mailings)
             {
@@ -125,7 +139,7 @@ namespace IntegraMailing.Controllers
                 var horaTentativa2String = mailing.hora_tentativa_2?.ToString("dd/MM/yyyy HH:mm:ss") ?? "";
                 var horaTentativa3String = mailing.hora_tentativa_3?.ToString("dd/MM/yyyy HH:mm:ss") ?? "";
 
-                stringBuilder.AppendLine($"{mailing.numero};{mailing.statusFinal};{horaTentativa1String};{horaTentativa2String};{horaTentativa3String}");
+                stringBuilder.AppendLine($"{mailing.numero};{mailing.status_1};{horaTentativa1String};{mailing.status_2};{horaTentativa2String};{mailing.status_3};{horaTentativa3String};{mailing.statusFinal}");
             }
 
             return stringBuilder.ToString();
@@ -137,5 +151,11 @@ namespace IntegraMailing.Controllers
             return Ok(tokens.RequestToken);
         }
 
+    }
+    public struct MailingResults
+    {
+        public int PaginaCounter { get; set; }
+        public int MaxPaginaCounter { get; set; }
+        public List<MailingFinalizado> MailingsFinalizados { get; set; }
     }
 }

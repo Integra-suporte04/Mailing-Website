@@ -2,11 +2,18 @@
     Layout = "~/Views/Shared/_AccountLayout.cshtml";
     ViewData["Title"] = "Login";
 }
-
+<style>
+    .box-div{
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.5);
+        background-color:aliceblue;
+        
+    }
+</style>
 <div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="main-div p-4">
+        <div class="col-md-6"> 
+            <div class="box-div p-4">
                 <h2 class="mb-4 text-center">Logar</h2>
                 <form method="post" asp-controller="Account" asp-action="Login">
                     <div class="form-group">

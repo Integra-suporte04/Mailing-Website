@@ -5,13 +5,80 @@
 }
 
 <style>
-    .index-main {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
+    .button-index {
+        background-color: #4CAF50; /* Verde da sua paleta */
+        color: white; /* Texto em branco para contraste */
+        border: none; /* Sem borda */
+        border-radius: 4px; /* Bordas arredondadas */
+        padding: 10px 20px; /* Espaçamento interno */
+        margin-top: 10px; /* Espaço acima do botão */
+        transition: background-color 0.3s ease-in-out; /* Transição suave para a cor de fundo */
     }
+
+    .form-group {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+        border: 2px solid #ddd; /* Borda sutil */
+        border-radius: 4px; /* Bordas arredondadas */
+        padding: 10px; /* Espaçamento interno */
+        margin-top: 0.5rem; /* Espaço após o label */
+    }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #4CAF50; /* Cor da borda ao focar no input */
+            outline: none; /* Remove o contorno padrão */
+        }
+        .button:disabled {
+            cursor: not-allowed;
+        }
+
+        .button-index:hover {
+            background-color: #367c39; /* Um tom mais escuro de verde ao passar o mouse */
+        }
+    .index-main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;     
+        width: 100%;
+        height: auto;
+        padding:0% 2% 0% 2%;
+        gap:10px;
+    }
+
+    .index-item {
+        background-color: #fff; /* Cor de fundo para o card */
+        border-radius: 8px; /* Bordas arredondadas */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra para dar profundidade */
+        padding: 20px; /* Espaçamento interno */
+        transition: transform 0.3s ease-in-out; /* Transição suave para hover */
+    }
+    .index-item.full-width{
+        grid-column: 1 / -1;
+    }
+
+    .form-inner-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Duas colunas com largura igual */
+        gap: 10px; /* Espaçamento entre os campos */
+    }
+
+        /* Ajusta a largura do botão para cobrir ambas as colunas */
+        .form-inner-grid .form-group.text-center {
+            grid-column: 1 / -1;
+        }
+        .index-item:hover {
+            transform: translateY(-5px); /* Efeito 'levitar' ao passar o mouse */
+        }
 
     .admin-container {
         max-width: 600px;
@@ -22,16 +89,21 @@
         margin-bottom: 20px;
     }
 
-    button:disabled {
-        cursor: not-allowed;
+
+    h3{
+        text-align:center;
+        display:flex;
+        justify-content:center;
+        width:100%; 
     }
 </style>
 
+<h3 class="mb-4">Modo Administrador</h3>
 <div class="text-center index-main">
     @if (accountType == "Admin")
     {
-        <div class="admin-container">
-            <h3 class="mb-4">Modo Administrador</h3>
+        <div class="index-item">
+            
 
             <!-- Atribuir Usuário a Empresa -->
             <div class="mb-4">
@@ -56,10 +128,11 @@
                     <div class="form-group">
                         <input type="text" id="nomeUsuario" name="nomeUsuario" placeholder="Digite o nome do usuário" class="form-control" required />
                     </div>
-                    <button id="atribuirUsuarioBtn" type="submit" disabled class="btn btn-primary btn-block">Atribuir Usuário</button>
+                    <button id="atribuirUsuarioBtn" type="submit" disabled class="btn button-index btn-block">Atribuir Usuário</button>
                 </form>
             </div>
-
+            </div>
+        <div class="index-item">
             <!-- Criar Empresa -->
             <div>
                 <h5 class="mb-3">Criar Empresa</h5>
@@ -67,41 +140,43 @@
                     <div class="form-group">
                         <input type="text" id="nomeEmp" name="nomeEmpresa" placeholder="Nome da Empresa" class="form-control" required />
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" disabled id="criarEmpresaBtn">Criar Empresa</button>
-                </form>
-            </div>
-            <!-- Criar Conta de Usuário -->
-            <div>
-                <h5 class="mb-3">Criar Usuário</h5>
-                <form id="accountForm" method="post" asp-controller="Account" asp-action="Register">
-                    <!--Define qual função será utilizado e qual controller-->
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" name="email" id="email" required>
-                        <span id="emailError" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirmEmail">Confirmar Email</label>
-                        <input type="email" class="form-control" name="confirmEmail" id="confirmEmail" required>
-                        <span id="confirmEmailError" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="pass">Senha</label>
-                        <input type="password" class="form-control" name="pass" id="pass" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPass">Confirmar Senha</label>
-                        <input type="password" class="form-control" name="confirmPass" id="confirmPass" required>
-                        <span id="passwordError" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary">Criar conta</button><!--Envia os dados do formulário para o banco de dados e registra o usuário-->
-                    </div>
+                    <button type="submit" class="btn button-index btn-block" disabled id="criarEmpresaBtn">Criar Empresa</button>
                 </form>
             </div>
         </div>
+            <div class="index-item full-width">
+                <!-- Criar Conta de Usuário -->
+                <div>
+                    <h5 class="mb-3">Criar Usuário</h5>
+                    <form id="accountForm" class="form-inner-grid" method="post" asp-controller="Account" asp-action="Register">
+                        <!--Define qual função será utilizado e qual controller-->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" name="email" id="email" required>
+                            <span id="emailError" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmEmail">Confirmar Email</label>
+                            <input type="email" class="form-control" name="confirmEmail" id="confirmEmail" required>
+                            <span id="confirmEmailError" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass">Senha</label>
+                            <input type="password" class="form-control" name="pass" id="pass" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPass">Confirmar Senha</label>
+                            <input type="password" class="form-control" name="confirmPass" id="confirmPass" required>
+                            <span id="passwordError" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn button-index">Criar conta</button><!--Envia os dados do formulário para o banco de dados e registra o usuário-->
+                        </div>
+                    </form>
+                </div>
+            </div>
     }
 </div>
 

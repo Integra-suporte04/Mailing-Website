@@ -9,7 +9,6 @@
   <ItemGroup>
     <None Include="wwwroot\assets\enterprise.png" />
     <None Include="wwwroot\assets\issabel_logo_mini.png" />
-    <None Include="wwwroot\css\Index.css" />
   </ItemGroup>
 
   <ItemGroup>

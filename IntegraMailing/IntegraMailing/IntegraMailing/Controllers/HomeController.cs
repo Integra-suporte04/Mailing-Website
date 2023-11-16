@@ -33,12 +33,14 @@ namespace IntegraMailing.Controllers
             homeModel.empresas = await _context.Empresas.ToListAsync();
             GetUserInfo(_currentUser);
 
+            TempData["ViewName"] = "Index";
 
             return View("~/Views/Home/Index.cshtml", homeModel);
         }
         [Authorize]
         public async Task<IActionResult> Lista()
         {
+            TempData["ViewName"] = "Lista";
             // _logger.LogInformation("Página Listas foi acessada.");
             await GetUserInfo();
 
@@ -51,6 +53,8 @@ namespace IntegraMailing.Controllers
         {
             
             GetUserInfo(_currentUser);
+            TempData["ViewName"] = "Resultados";
+
             return RedirectToAction("GetCampanhas", "ResultadoCampanha");
 
         }
