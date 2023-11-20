@@ -26,7 +26,7 @@ a[b-xj3bjhmlq7] {
 
 
 .navbar[b-xj3bjhmlq7] {
-    background: linear-gradient(45deg,#455A64,#607D8B);
+    background-color: #2E659C;
     height: 8vh;
     z-index: 10;
     border: none !important;
@@ -103,7 +103,7 @@ button.accept-policy[b-xj3bjhmlq7] {
     width: 100%;
     white-space: nowrap;
     color: white !important;
-    background-color: #455A64;
+    background-color: #2E659C;
     height: 5vh;
     display: flex;
     align-items: center;

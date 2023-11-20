@@ -34,9 +34,11 @@
                 <a class="navbar-brand text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">Validação de Mailing</a>
 
                 <div class="d-flex align-items-center ms-auto">
-                    <button class="btn btn-outline-light me-2" type="button">
-                        <i class="fas fa-cog"></i>
-                    </button>
+                    <form method="post" asp-controller="Home" asp-action="Perfil">
+                        <button type = "submit" class="btn btn-outline-light me-2" type="button">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </form>
                     <div class="notification me-2 position-relative">
                         <span class="badge bg-dark position-absolute top-0 start-100 translate-middle">0</span>
 

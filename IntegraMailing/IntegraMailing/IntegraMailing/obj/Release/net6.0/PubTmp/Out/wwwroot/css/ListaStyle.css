@@ -45,6 +45,18 @@
     background: none;
     border: none;
 }
+.btn-play {
+    background: none;
+    border: none;
+    height:auto;
+    flex:1;
+    padding: 0px 6px 0px 6px;
+    border-radius: 0px 6px 6px 0px;
+    transition: 1s ease;
+}
+.btn-play:hover{
+    background-color: gainsboro;
+}
 
 .btn-carregar-csv:hover {
     background-color: #f0f0f0; /* Cor de fundo quando o mouse está sobre o botão */
@@ -92,7 +104,7 @@
     border: 1px solid #ccc;
     display: inline-block;
     background-color: #f8f8f8;
-    border-radius: 4px;
+    border-radius: 6px 0px 0px 6px;
     font-size: 14px;
 }
 
@@ -127,10 +139,15 @@
 
 .progress-bar {
     background-size: 200% 200%;
-    background-image: linear-gradient(45deg, #3498db, #85c1e9, #2980b9, #85c1e9);
+    background-image: linear-gradient(45deg, #2ecc71, #82e0aa, #27ae60, #82e0aa);
     animation: gradient-animation 5s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
+.progress{
+    height:1.3rem;
+}
 #btnNew {
     align-items: center;
     background-color: #FFFFFF;
@@ -176,6 +193,11 @@
     box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
     color: rgba(0, 0, 0, 0.65);
     transform: translateY(0);
+}
+.upload-buttons{
+    border: 1px solid darkgrey;
+    border-radius: 6px;
+    display: flex;
 }
 
 

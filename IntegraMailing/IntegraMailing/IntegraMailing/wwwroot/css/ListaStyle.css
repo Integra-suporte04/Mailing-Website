@@ -139,13 +139,15 @@
 
 .progress-bar {
     background-size: 200% 200%;
-    background-image: linear-gradient(45deg, #3498db, #85c1e9, #2980b9, #85c1e9);
+    background-image: linear-gradient(45deg, #2ecc71, #82e0aa, #27ae60, #82e0aa);
     animation: gradient-animation 5s ease infinite;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
+.progress{
+    height:1.3rem;
+}
 #btnNew {
     align-items: center;
     background-color: #FFFFFF;

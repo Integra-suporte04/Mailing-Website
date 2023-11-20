@@ -26,7 +26,7 @@ a[b-xj3bjhmlq7] {
 
 
 .navbar[b-xj3bjhmlq7] {
-    background: linear-gradient(45deg,#455A64,#607D8B);
+    background-color: #2E659C;
     height: 8vh;
     z-index: 10;
     border: none !important;
@@ -63,7 +63,7 @@ a[b-xj3bjhmlq7] {
         right: 1vw;
         background-color: black;
         color: white;
-        border-radius: 50%;
+        border-radius: 4px;
         padding: 5px 8px;
         font-size: 12px;
     }
@@ -103,7 +103,7 @@ button.accept-policy[b-xj3bjhmlq7] {
     width: 100%;
     white-space: nowrap;
     color: white !important;
-    background-color: #455A64;
+    background-color: #2E659C;
     height: 5vh;
     display: flex;
     align-items: center;
@@ -223,11 +223,12 @@ button.accept-policy[b-xj3bjhmlq7] {
     /*border: 1px solid #ccc;*/
     /*margin-bottom: 10px;*/
     position: relative;
+    padding: 0px 5px 5px 5px;
 }
 
 .toggle-button[b-xj3bjhmlq7] {
     width: 100%;
-    padding: 10px;
+    padding: 10px 0px 0px 0px;
     text-align: left;
     background-color: transparent;
     border: none;
@@ -238,11 +239,11 @@ button.accept-policy[b-xj3bjhmlq7] {
     align-items: center;
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
-    font-size:14px;
+    font-size:15px;
 }
 .option-button[b-xj3bjhmlq7] {
     width: 100%;
-    padding: 10px;
+    padding: 0px 10px 0px 10px;
     text-align: left;
     background-color: transparent;
     border: none;
@@ -254,7 +255,7 @@ button.accept-policy[b-xj3bjhmlq7] {
 
 .options[b-xj3bjhmlq7] {
     display: none;
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
 }
 
 .toggle-button[b-xj3bjhmlq7]::after {
