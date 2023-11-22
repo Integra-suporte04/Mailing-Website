@@ -119,10 +119,10 @@
 
             <span> Resultados >> Campanhas >> Mailings</span>
         </div>
-        <div style="display:flex; justify-content:center; flex:3;">
+        <div style="display:flex; justify-content:center; align-items:center; flex:3;">
             @if(Model.MailingsFinalizados.Count > 0)
             {
-            <button id="btn-export" class="btn ml-auto" onclick="location.href='@Url.Action("ExportarCsv", "ResultadoCampanha", new {campanhaId = Model.MailingsFinalizados[0].campanha_id})'"><i class="fa-solid fa-file-export"></i> Exportar como CSV</button>
+            <button style="display:flex; justify-content:center; align-items:center;" id="btn-export" class="btn ml-auto" onclick="location.href='@Url.Action("ExportarCsv", "ResultadoCampanha", new {campanhaId = Model.MailingsFinalizados[0].campanha_id})'"><i class="fa-solid fa-file-export"></i> Exportar como CSV</button>
             }
         </div>
     </div>
@@ -149,19 +149,25 @@
         else
 
         {
-            @foreach (var mailing in Model.MailingsFinalizados)
+            int index = (10 * Model.PaginaCounter - 9);
+            int reachValue = Model.MailingsFinalizados.Count - index > 9 ? index + 9 : Model.MailingsFinalizados.Count;
+
+            @for (;index <= reachValue;index++)
             {
+                System.Diagnostics.Debug.WriteLine("Index: "+index);
+                System.Diagnostics.Debug.WriteLine(reachValue);
                 <tr>
-                    <td>@mailing.numero</td>
-                    <td>@mailing.status_1</td>
-                    <td>@mailing.hora_tentativa_1</td>
-                    <td>@mailing.status_2</td>
-                    <td>@mailing.hora_tentativa_2</td>
-                    <td>@mailing.status_3</td>
-                    <td>@mailing.hora_tentativa_3</td>
-                    <td>@mailing.statusFinal</td>
+                    <td>@Model.MailingsFinalizados[index-1].numero</td>
+                    <td>@Model.MailingsFinalizados[index-1].status_1</td>
+                    <td>@Model.MailingsFinalizados[index-1].hora_tentativa_1</td>
+                    <td>@Model.MailingsFinalizados[index-1].status_2</td>
+                    <td>@Model.MailingsFinalizados[index-1].hora_tentativa_2</td>
+                    <td>@Model.MailingsFinalizados[index-1].status_3</td>
+                    <td>@Model.MailingsFinalizados[index-1].hora_tentativa_3</td>
+                    <td>@Model.MailingsFinalizados[index-1].statusFinal</td>
                 </tr>
             }
+
         }
 
     </tbody>

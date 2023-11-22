@@ -223,6 +223,7 @@ button.accept-policy {
     /*border: 1px solid #ccc;*/
     /*margin-bottom: 10px;*/
     position: relative;
+    overflow:hidden;
     padding: 0px 5px 5px 5px;
 }
 
@@ -260,6 +261,7 @@ button.accept-policy {
 
 .toggle-button::after {
     content: "+";
+
 }
 
 .expanded .toggle-button::after {
@@ -270,11 +272,27 @@ button.accept-policy {
     display: block;
 }
 
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4CAF50;
+    border-radius: 6px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #45a049;
+    }
 
 #mainContent {
 
     height: 87vh;
-    overflow-y: hidden;
+    overflow-y: scroll;
     flex:3;
 }
 #mainContent.expanded{

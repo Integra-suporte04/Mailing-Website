@@ -126,7 +126,7 @@ namespace IntegraMailing.Controllers
 
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
-            if (campanha != null && campanha.Executed && campanha.Evolution < 100f)
+            if (campanha != null && campanha.Executed && (campanha.Evolution < 100f || campanha.Evolution == 100 && campanha.ExecutionCount < 3))
             {
                 // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
                 return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");
@@ -296,7 +296,7 @@ namespace IntegraMailing.Controllers
             var userEmail = await _userManager.GetEmailAsync(user);
             listaViewModel.LinhaLista = await _context.Campanhas.Where(c => c.user_name == userEmail).ToListAsync();
             var campanhasParaFinalizar = await _context.Campanhas
-    .Where(c => c.user_name == userEmail && c.Evolution == 100f && c.Status != "Finalizada")
+    .Where(c => c.user_name == userEmail && c.Evolution == 100f && c.ExecutionCount == 3 && c.Status != "Finalizada")
     .ToListAsync();
 
 

@@ -101,8 +101,9 @@
                 <div id="extraContent-@i" class="extra-content">
                     <div colspan="4">
                         <div class="progress progress-striped">
+                            <div style="position:absolute; left:50%; transform:translateX(-50%);"> <b>Etapa da Validação: @Model.LinhaLista[i].ExecutionCount</b> / Progresso: @Model.LinhaLista[i].Evolution % </div>
                             <div class="progress-bar" role="progressbar" style="width: @Model.LinhaLista[i].Evolution%;" aria-valuenow="@Model.LinhaLista[i].Evolution" aria-valuemin="0" aria-valuemax="100">
-                                <div style="width 50%;"> <b>Etapa da Validação: @Model.LinhaLista[i].ExecutionCount</b> / Progresso: @Model.LinhaLista[i].Evolution % </div>
+                                
                                 </div>
                         </div>
 

@@ -39,13 +39,13 @@
                             <i class="fas fa-cog"></i>
                         </button>
                     </form>
-                    <div class="notification me-2 position-relative">
+@*                     <div class="notification me-2 position-relative">
                         <span class="badge bg-dark position-absolute top-0 start-100 translate-middle">0</span>
 
                         <button class="btn btn-outline-light" type="button">
                             <i class="fas fa-bell"></i>
                         </button>
-                    </div>
+                    </div> *@
                     <form method="post" asp-controller="Account" asp-action="Logout">
                         <button type="submit" class="btn btn-outline-light">
                             <i class="fas fa-sign-out-alt"></i>
@@ -150,6 +150,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
+
         function toggleSidebar(open) {
             var sidebar = document.getElementById('sidebar'); // Seleciona o elemento pelo ID
             if (sidebar) {

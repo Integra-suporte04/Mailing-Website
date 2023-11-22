@@ -147,6 +147,7 @@
 }
 .progress{
     height:1.3rem;
+    position:relative;
 }
 #btnNew {
     align-items: center;
