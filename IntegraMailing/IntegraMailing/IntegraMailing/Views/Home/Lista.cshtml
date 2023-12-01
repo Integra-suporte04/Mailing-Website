@@ -23,9 +23,10 @@
 
         </div>
         
-        @if(Model!=null)
+        @if(Model.LinhaLista.Count!=0)
         {
             int indice = (Model.PaginaCounter * 6);
+            
 
             @for (int i = indice - 6; i < indice && i < Model.LinhaLista.Count; i++)
             {
@@ -127,10 +128,9 @@
                         firstPage = 1;
 
 
-
-                        @for (int i = firstPage; i <= Model.MaxPaginaCounter && i <= firstPage + 4; i++)
+                    @for (int i = firstPage; i <= Model.MaxPaginaCounter && i <= firstPage + 4; i++)
                     {
-                        System.Diagnostics.Debug.WriteLine(Model.MaxPaginaCounter);
+                        
                         var btnClass = (i == Model.PaginaCounter) ? "btn-pagina btn-pagina-selecionada" : "btn-pagina";
                             <form asp-controller="LoadCSV" asp-action="TrocaPagina" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="index" value="@i" />

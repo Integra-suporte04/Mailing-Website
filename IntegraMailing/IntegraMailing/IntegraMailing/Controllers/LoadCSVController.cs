@@ -40,8 +40,7 @@ namespace IntegraMailing.Controllers
             var user = await _userManager.GetUserAsync(User);
             _accountService.GetUserInfo(user, this);
 
-            listaViewModel.MaxPaginaCounter = ((listaViewModel.LinhaLista.Count - 1) / 6) + 1;
-
+           
             Campanhas campanha = new Campanhas
             {
                 Name = "No name",
@@ -177,28 +176,6 @@ namespace IntegraMailing.Controllers
             return RedirectToAction("GetCampanhas");
         }
 
-        /*
-        [HttpPost]
-        public async Task<IActionResult> StartMailing(int campanhaId)
-        {
-
-            var campanha = await _context.Campanhas.FindAsync(campanhaId);
-            Debug.WriteLine(campanha.Status);
-
-            if (campanha == null || campanha.InProgress)
-            {
-                return BadRequest("A campanha já está em execução ou o ID é inválido.");
-            }
-
-            campanha.InProgress = true;
-            campanha.Paused = false;
-            campanha.Status = "Enviado";
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-        */
-
         public void ExecuteMailingScript(int campanhaId)
         {
       
@@ -208,8 +185,8 @@ namespace IntegraMailing.Controllers
 
             var startInfo = new ProcessStartInfo
             {
-                FileName = "python3.8", // ou "python3" dependendo do seu sistema
-                Arguments = $"/home/validacao/Scripts/validar.py {campanhaId}",
+                FileName = "/bin/bash",
+                Arguments = $"-c \"nohup python3.8 /home/validacao/validar.py {campanhaId} > /home/validacao/nohup.out 2>&1 &\"",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -295,6 +272,7 @@ namespace IntegraMailing.Controllers
 
             var userEmail = await _userManager.GetEmailAsync(user);
             listaViewModel.LinhaLista = await _context.Campanhas.Where(c => c.user_name == userEmail).ToListAsync();
+            listaViewModel.MaxPaginaCounter = ((listaViewModel.LinhaLista.Count - 1) / 6) + 1;
             var campanhasParaFinalizar = await _context.Campanhas
     .Where(c => c.user_name == userEmail && c.Evolution == 100f && c.ExecutionCount == 3 && c.Status != "Finalizada")
     .ToListAsync();

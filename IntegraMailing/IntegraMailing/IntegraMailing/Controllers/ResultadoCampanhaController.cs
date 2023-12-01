@@ -50,11 +50,11 @@ namespace IntegraMailing.Controllers
             }
             if(startDate.HasValue)
             {
-                query = query.Where(c => c.Data_Sent >= startDate.Value);
+                query = query.Where(c => c.Data_Sent.Value.Date >= startDate.Value.Date);
             }
             if (endDate.HasValue)
-            {
-                query = query.Where(c => c.Data_Sent <= endDate.Value);
+            {              
+                query = query.Where(c => c.Data_Sent.Value.Date <= endDate.Value.Date);
             }
 
             // Filtro por status
@@ -106,9 +106,19 @@ namespace IntegraMailing.Controllers
         }
 
         [HttpPost]
-        public IActionResult TrocaPagina(int index)
+        public async Task<IActionResult> TrocaPagina(int index)
         {
-            if(mailingResults.MailingsFinalizados != null)
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                ViewData["AccountType"] = user.AccountType;
+                ViewData["UserEmail"] = user.Email;
+                ViewData["UserName"] = user.UserName;
+
+            }
+
+            if (mailingResults.MailingsFinalizados != null)
                 mailingResults.PaginaCounter = index;
 
             return View("~/Views/Home/ResultadosMailing.cshtml", mailingResults);
