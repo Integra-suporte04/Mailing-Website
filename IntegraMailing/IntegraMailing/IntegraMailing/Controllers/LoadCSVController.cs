@@ -97,7 +97,7 @@ namespace IntegraMailing.Controllers
                 Campanhas campanhasInstance = new Campanhas
                 {
                     Name = file.FileName,
-                    Status = "Enviada"
+                    Status = "Erro"
                 };
 
                 await UpdateCampanha(campanhasInstance, listaViewModel.LinhaLista[linhaId].Id);
@@ -125,7 +125,7 @@ namespace IntegraMailing.Controllers
 
             var campanha = await _context.Campanhas.FindAsync(campanhaId);
 
-            if (campanha != null && campanha.Executed && (campanha.Evolution < 100f || campanha.Evolution == 100 && campanha.ExecutionCount < 3))
+            if (campanha != null && campanha.Executed && !campanha.Paused && (campanha.Evolution < 100f || (campanha.Evolution == 100 && campanha.ExecutionCount < 3)))
             {
                 // Retorna uma mensagem de erro ou algum tipo de resposta indicando que a campanha está em execução
                 return BadRequest("A campanha está em execução e não pode ser deletada neste momento.");
@@ -261,7 +261,6 @@ namespace IntegraMailing.Controllers
 
         }
 
-
         //Método para pegar as campanhas no SQL e transformar em formato de Lista dentro da Model ListaViewModel.
         //A Model é passada para a View como parametro, com isso os dados serão enviados para lá.
         //Sempre que este método é acionado, a página é recarregada
@@ -301,8 +300,10 @@ namespace IntegraMailing.Controllers
         [HttpPost]
         public IActionResult SetFileName(IFormFile file)
         {
- 
-            return Json(new {fileName = file.FileName});
+            if (file != null)
+                return Json(new { fileName = file.FileName });
+            else
+                return Json(new {fileName = "VAZIO"});
         }
 
         [HttpGet]

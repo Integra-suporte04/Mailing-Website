@@ -1,5 +1,6 @@
 ﻿@using IntegraMailing.Data
-@model List<Campanhas>
+@using IntegraMailing.Controllers
+@model CampanhasResults
 @{
     ViewData["Title"] = "Resultados das Campanhas";
 }
@@ -99,7 +100,7 @@
 }
 
 
-<h4 class="page-title" style="display:flex; align-items:center;"><button onclick="location.href='@Url.Action("Index", "Home")'"  class="btn">&#127968;</button>Resultados >> Campanhas</h4>
+<h4 class="page-title" style="display:flex; align-items:center;"><button onclick="location.href='@Url.Action("Index", "Home")'" class="btn" title="Página inicial">&#127968;</button>Resultados >> Campanhas</h4>
 
 <!-- Barra de pesquisa e filtros -->
 <form id="filterForm" asp-controller="ResultadoCampanha" asp-action="GetCampanhasFilter" method="post" enctype="multipart/form-data">
@@ -120,7 +121,7 @@
         <label for="statusFilter">Status:</label>
             <select class="form-control" id="statusFilter" name="statusFilter">
             <option value="">Selecione o status</option>
-            <option value="Em Progresso...">Enviada</option>
+            <option value="Erro">Erro</option>
             <option value="Em Progresso...">Em Progresso</option>
             <option value="Pausada">Pausada</option>
             <option value="Finalizada">Finalizada</option>
@@ -144,22 +145,52 @@
         </tr>
     </thead>
     <tbody>
-        @for (var i = 0; i < Model.Count; i++)
+        @{
+            int indice = (Model.PaginaCounter * 6);
+        }
+        @for (var i = indice - 6; i  < indice && i < Model.Campanhas.Count; i++)
         {
             var backgroundColor = i % 2 == 0 ? "background-color: #a0aec0;" : "background-color: white;";
             <tr style="@backgroundColor" onclick="submitForm(@i)">
                 <td>
                     <form id="form-@i" method="post" asp-action="GetMailings" asp-controller="ResultadoCampanha">
-                        <input type="hidden" name="campanhaId" value="@Model[i].Id" />
-                        <button type="submit" class="btn text-left" style="width:100%;">@Model[i].Name</button>
+                        <input type="hidden" name="campanhaId" value="@Model.Campanhas[i].Id" />
+                        <button type="submit" class="btn text-left" style="width:100%;">@Model.Campanhas[i].Name</button>
                     </form>
                 </td>
-                <td>@Model[i].Data_Sent.Value.ToString("dd/MM/yyyy")</td>
-                <td>@Model[i].Status</td>
+                <td>@Model.Campanhas[i].Data_Sent.Value.ToString("dd/MM/yyyy")</td>
+                <td>@Model.Campanhas[i].Status</td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="pagina-info">
+    Mostrando @((6 * Model.PaginaCounter) - 5) a @((6 * Model.PaginaCounter < Model.Campanhas.Count) ? (6 * Model.PaginaCounter) : (Model.Campanhas.Count)) de @Model.Campanhas.Count resultados
+</div>
+<!-- Botões de navegação de página -->
+<div class="paginacao">
+    @{
+        int firstPage = 0;
+
+        if (Model.PaginaCounter >= 3)
+            firstPage = Model.PaginaCounter - 2;
+        else
+            firstPage = 1;
+
+
+        @for (int i = firstPage; i <= Model.MaxPaginaCounter && i <= firstPage + 4; i++)
+        {
+
+            var btnClass = (i == Model.PaginaCounter) ? "btn-pagina btn-pagina-selecionada" : "btn-pagina";
+            <form asp-controller="ResultadoCampanha" asp-action="TrocaPaginaCampanhas" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="index" value="@i" />
+                <button class="@btnClass">@i</button>
+            </form>
+        }
+
+    }
+</div>
 
 @section Scripts
 {
@@ -170,22 +201,22 @@
         $(document).ready(function () {
 
 
-            $("#filterForm").on("submit", function (event) {
-                event.preventDefault();  // Prevenindo o comportamento padrão de submissão do formulário
+        //     $("#filterForm").on("submit", function (event) {
+        //         event.preventDefault();  // Prevenindo o comportamento padrão de submissão do formulário
 
-                var formData = $(this).serialize();  // Serialize os dados do formulário
+        //         var formData = $(this).serialize();  // Serialize os dados do formulário
 
-                $.ajax({
-                    url: '@Url.Action("GetCampanhasFilter", "ResultadoCampanha")',
-                    type: 'POST',
-                    data: formData,
-                    success: function (data) {
-                        console.log(data);
-                        updateTable(data);  // Atualize a tabela com os novos dados
-                    }
-                });
-            });
-        });
+        //         $.ajax({
+        //             url: '@Url.Action("GetCampanhasFilter", "ResultadoCampanha")',
+        //             type: 'POST',
+        //             data: formData,
+        //             success: function (data) {
+        //                 console.log(data);
+        //                 updateTable(data);  // Atualize a tabela com os novos dados
+        //             }
+        //         });
+        //     });
+        // });
 
         function updateTable(data) {
             // Obtenha o token anti-falsificação do servidor

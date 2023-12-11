@@ -2,9 +2,17 @@
 @{
     ViewData["Title"] = "Lista";
 } 
+<style>
+    .hiddenDiv{
+        visibility:hidden;
+    }
+    .noBorder{
+        border:none;
+    }
+</style>
 
 <div class="container-fluid">
-    <h4 class="page-title" style="display:flex; align-items:center;"><button onclick="location.href='@Url.Action("Index", "Home")'" class="btn">&#127968;</button>Campanhas >> Listas</h4>
+    <h4 class="page-title" style="display:flex; align-items:center;"><button onclick="location.href='@Url.Action("Index", "Home")'" class="btn" title="Página inicial">&#127968;</button>Campanhas >> Listas</h4>
     
     <div class="templateDiv">
 
@@ -47,65 +55,84 @@
                     </div>
 
                     <div id="botoes-campanha">
-                       
-                    
-                        <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id="form-atualiza-linha" method="post" enctype="multipart/form-data">
-                            @if(!Model.LinhaLista[i].Executed)
-                            {
-                                <div class="upload-buttons">
+                        @{
+                            string isHiddenClass = "";
+                            string isHiddenButton = "";
+                            string hasBorderClass = "";
+                            string isDisabled = "";
+                        }
 
-                                    <label class="custom-file-upload">
-                                        <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" required />
-                                        Carregar CSV
-                                    </label>
-                                    
-                                    <input type="hidden" name="linhaId" value="@i" />
-                                    <button type="submit" class="btn-play"><i class="fas fa-play" style="color:green"></i></button>
-                                    
-                                </div>
-                            }
-                            else if(Model.LinhaLista[i].Paused)
+                        <form asp-controller="LoadCSV" asp-action="AtualizaLinha" id="form-atualiza-linha" method="post" enctype="multipart/form-data">
+  
+
+                            @if(Model.LinhaLista[i].Paused)
                             {
-                                <input type="hidden" name="linhaId" value="@i" />
-                                <button type="submit" class="btn-play"><i class="fas fa-play" style="color:green"></i></button>
+                                isHiddenClass = "hiddenDiv";                                
+                                hasBorderClass = "noBorder";
+                                isDisabled = "disabled";
                             }
+                            @if (Model.LinhaLista[i].Executed && !Model.LinhaLista[i].Paused)
+                            {
+                                isHiddenClass = "hiddenDiv";
+                                hasBorderClass = "noBorder";
+                                isDisabled = "disabled";
+                                isHiddenButton = "hiddenDiv";
+                            }
+
+
+
+                            <div class="upload-buttons @hasBorderClass"> 
+
+                                <label class="custom-file-upload @isHiddenClass">
+                                    <input type="file" name="file" accept=".csv" id="file-@i" data-index="@i" style="display:none" @isDisabled required />
+                                    Carregar CSV
+                                </label>
+
+                                <input type="hidden" name="linhaId" value="@i" />
+                                <button title="Executar Campanha" type="submit" class="btn-play @isHiddenButton"><i class="fas fa-play" style="color:green"></i></button>
+
+                            </div>
 
                         </form>
 
-                    
+                        @{
+                            isHiddenClass = "hiddenDiv";
+                        }
                         @if(Model.LinhaLista[i].Executed && !Model.LinhaLista[i].Paused && Model.LinhaLista[i].Evolution < 100)
                         {
-                            <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="linhaId" value="@i" />
-                                <button class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
-                            </form>
+                            isHiddenClass = "";
                         }
-
+                        
+                        <form asp-controller="LoadCSV" asp-action="PauseCampaign" method="post" enctype="multipart/form-data" class="@isHiddenClass">
+                            <input type="hidden" name="linhaId" value="@i" />
+                            <button title="Pausar Campanha" class="btn-deletar"><i class="fas fa-pause" style="color:red"></i></button>
+                        </form>
+                        @{
+                            isHiddenClass = "hiddenDiv";
+                        }
                         @if (!Model.LinhaLista[i].Executed || (Model.LinhaLista[i].Executed && Model.LinhaLista[i].Paused) || Model.LinhaLista[i].Evolution==100)
                         {
-                            <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="index" value="@i" />
-                                <button type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
-                            </form>
+                            isHiddenClass = "";
                         }
+                        <form asp-controller="LoadCSV" asp-action="DeletaLinha" method="post" enctype="multipart/form-data" class="@isHiddenClass">
+                            <input type="hidden" name="index" value="@i" />
+                            <button title="Deletar Campanha" type="submit" class="btn-deletar"><i class="fas fa-trash" style="color:red"></i></button>
+                        </form>
 
 
-                        <button class="btn-deletar" onclick="location.href='@Url.Action("GetCampanhas", "LoadCSV")'">
+                        <button title="Atualizar informações de campanha" class="btn-deletar" onclick="location.href='@Url.Action("GetCampanhas", "LoadCSV")'">
                             <i class="fas fa-sync"></i>
                         </button>
-                    
 
-                        <button class="btn expand-button" data-target="#extraContent-@i"><i class="fa-solid fa-chevron-down"></i></button>
+                        <button title="Mais informações" class="btn expand-button" data-target="#extraContent-@i"><i class="fa-solid fa-angles-down"></i></button>
 
                     </div>
                 </div>
                 <div id="extraContent-@i" class="extra-content">
                     <div colspan="4">
-                        <div class="progress progress-striped">
+                        <div class="progress progress-striped mb-2">
                             <div style="position:absolute; left:50%; transform:translateX(-50%);"> <b>Etapa da Validação: @Model.LinhaLista[i].ExecutionCount</b> / Progresso: @Model.LinhaLista[i].Evolution % </div>
-                            <div class="progress-bar" role="progressbar" style="width: @Model.LinhaLista[i].Evolution%;" aria-valuenow="@Model.LinhaLista[i].Evolution" aria-valuemin="0" aria-valuemax="100">
-                                
-                                </div>
+                            <div class="progress-bar" role="progressbar" style="width: @Model.LinhaLista[i].Evolution%;" aria-valuenow="@Model.LinhaLista[i].Evolution" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
 
                     </div>
@@ -162,6 +189,7 @@
 {
     <script>
         $(document).ready(function () {
+            var arquivoSelecionado;
             $(".expand-button").click(function () {
                 // Identificar a barra de progresso associada ao botão clicado
                 var target = $(this).data("target");
@@ -170,11 +198,15 @@
                 var isVisible = $(target).is(":visible");
 
                 // Ocultar todas as barras de progresso
-                $(".extra-content").hide();
+                //$(".extra-content").hide();
 
                 // Se a barra de progresso associada estava oculta, mostrá-la
                 if (!isVisible) {
                     $(target).show();
+                }
+                else if(isVisible)
+                {
+                    $(target).hide();
                 }
             });
 
@@ -186,6 +218,7 @@
                 formData.append('linhaId', index);
 
                 var inputElement = $(this);
+                
 
                 $.ajax({
                     url: '@Url.Action("SetFileName", "LoadCSV")',

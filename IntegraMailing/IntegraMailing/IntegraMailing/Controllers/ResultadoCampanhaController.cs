@@ -15,6 +15,7 @@ namespace IntegraMailing.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IAntiforgery _antiforgery;
         public static  MailingResults mailingResults;
+        public static CampanhasResults campanhasResults;
         public ResultadoCampanhaController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IAntiforgery antiforgery)
         {
             _userManager = userManager;
@@ -26,6 +27,7 @@ namespace IntegraMailing.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userEmail = await _userManager.GetEmailAsync(user);  // obter o email do usuário como você já fez
             var query = _context.Campanhas.Where(c => c.user_name == userEmail);
+            var campanhas = query.ToListAsync();
 
             if (user != null)
             {
@@ -34,8 +36,10 @@ namespace IntegraMailing.Controllers
                 ViewData["UserName"] = user.UserName;
 
             }
+            int maxPaginaCounter = campanhas.Result.Count % 6 == 0 ? campanhas.Result.Count / 6 : (campanhas.Result.Count / 6) + 1;
 
-            return View("~/Views/Home/Resultados.cshtml", await query.ToListAsync());
+            campanhasResults = new CampanhasResults { MaxPaginaCounter = maxPaginaCounter, Campanhas = campanhas.Result, PaginaCounter = 1 };
+            return View("~/Views/Home/Resultados.cshtml", campanhasResults);
         }
         [HttpPost]
         public async Task<IActionResult> GetCampanhasFilter(string searchName, DateTime? startDate, DateTime? endDate, string statusFilter)
@@ -71,8 +75,10 @@ namespace IntegraMailing.Controllers
                 ViewData["UserName"] = user.UserName;
 
             }
-            var result = await query.ToListAsync();
-            return Json(result);
+            var campanhas = await query.ToListAsync();
+            int maxPaginaCounter = campanhas.Count % 6 == 0 ? campanhas.Count / 6 : (campanhas.Count / 6) + 1;
+            campanhasResults = new CampanhasResults { MaxPaginaCounter = maxPaginaCounter, Campanhas = campanhas, PaginaCounter = 1 };
+            return View("~/Views/Home/Resultados.cshtml", campanhasResults);
         }
 
         [HttpPost]
@@ -123,6 +129,24 @@ namespace IntegraMailing.Controllers
 
             return View("~/Views/Home/ResultadosMailing.cshtml", mailingResults);
         }
+        [HttpPost]
+        public async Task<IActionResult> TrocaPaginaCampanhas(int index)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                ViewData["AccountType"] = user.AccountType;
+                ViewData["UserEmail"] = user.Email;
+                ViewData["UserName"] = user.UserName;
+
+            }
+
+            if (campanhasResults.Campanhas != null)
+                campanhasResults.PaginaCounter = index;
+
+            return View("~/Views/Home/Resultados.cshtml", campanhasResults);
+        }
 
         public IActionResult ExportarCsv(int campanhaId)
         {
@@ -132,7 +156,7 @@ namespace IntegraMailing.Controllers
             var bytes = Encoding.UTF8.GetBytes(csvString);
 
             var fileName = _context.Campanhas.Find(campanhaId).Name;
-            fileName = fileName.Remove(fileName.IndexOf(".csv") - 4);
+            fileName = fileName.Remove(fileName.IndexOf(".csv"));
 
             return File(bytes, "text/csv", fileName + "_Resultado.csv");
         }
@@ -167,5 +191,12 @@ namespace IntegraMailing.Controllers
         public int PaginaCounter { get; set; }
         public int MaxPaginaCounter { get; set; }
         public List<MailingFinalizado> MailingsFinalizados { get; set; }
+    }
+    public struct CampanhasResults
+    {
+        public int PaginaCounter { get; set; }
+        public int MaxPaginaCounter { get; set; }
+        public List<Campanhas> Campanhas { get; set; }
+
     }
 }

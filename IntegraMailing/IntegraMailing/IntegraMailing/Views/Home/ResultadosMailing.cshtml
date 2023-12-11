@@ -128,19 +128,22 @@
     </div>
 </h4>
 <table id="mailingsTable" class="display">
+    @if(Model.MailingsFinalizados.Count > 0)
+    {
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Status 1</th>
+                <th>Hora da Tentativa 1</th>
+                <th>Status 2</th>
+                <th>Hora da Tentativa 2</th>
+                <th>Status 3</th>
+                <th>Hora da Tentativa 3</th>
+                <th>Status Final</th>
+            </tr>
+        </thead>
+    }
 
-    <thead>
-        <tr>
-            <th>Número</th>
-            <th>Status 1</th>
-            <th>Hora da Tentativa 1</th>
-            <th>Status 2</th>
-            <th>Hora da Tentativa 2</th>
-            <th>Status 3</th>
-            <th>Hora da Tentativa 3</th>
-            <th>Status Final</th>
-        </tr>
-    </thead>
     <tbody>
         @if(Model.MailingsFinalizados.Count < 1)
         {
@@ -173,9 +176,13 @@
     </tbody>
 </table>
 
-<div class="pagina-info">
-    Mostrando @((10 * Model.PaginaCounter) - 9) a @((10 * Model.PaginaCounter < Model.MailingsFinalizados.Count) ? (10 * Model.PaginaCounter) : (Model.MailingsFinalizados.Count)) de @Model.MailingsFinalizados.Count resultados
-</div>
+@if(Model.MailingsFinalizados.Count > 0)
+{
+    <div class="pagina-info">
+        Mostrando @((10 * Model.PaginaCounter) - 9) a @((10 * Model.PaginaCounter < Model.MailingsFinalizados.Count) ? (10 * Model.PaginaCounter) : (Model.MailingsFinalizados.Count)) de @Model.MailingsFinalizados.Count resultados
+    </div>
+}
+
 
 <!-- Botões de navegação de página -->
 <div class="paginacao">
