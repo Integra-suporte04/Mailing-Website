@@ -85,6 +85,7 @@ namespace IntegraMailing.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetMailings(int campanhaId)
         {
+            Debug.WriteLine(campanhaId);
             var user = await _userManager.GetUserAsync(User);
             var userEmail = await _userManager.GetEmailAsync(user);
 
