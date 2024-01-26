@@ -79,6 +79,16 @@ a[b-ksrqczyrcf] {
     background-color: white;
     border: 1px dotted black;
 }
+.footer[b-ksrqczyrcf] {
+    position: absolute;
+    width: 100vw;
+    background-color: #2E659C;
+    color: white !important;
+    bottom: 0;
+    display:flex;
+    align-items:center;
+    height:40px;
+}
 /* _content/IntegraMailing/Views/Shared/_Layout.cshtml.rz.scp.css */
  /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */

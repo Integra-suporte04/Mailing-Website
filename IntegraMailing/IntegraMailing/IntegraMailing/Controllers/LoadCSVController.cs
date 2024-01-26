@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using IntegraMailing.Services;
 using System.Text.Json;
 using System.Linq;
+using System.IO;
+
 
 namespace IntegraMailing.Controllers
 {
@@ -181,20 +183,69 @@ namespace IntegraMailing.Controllers
       
             _logger.LogInformation("Executando python com ID: " + campanhaId);
 
+            string serviceName = $"mailing-campanha{campanhaId}.service";
+            string serviceContent = $@"
+            [Unit]
+            Description=Script Python para a campanha {campanhaId}
+
+            [Service]
+            User=root
+            ExecStart=/bin/bash -c 'python3.8 /home/validacao/validar.py {campanhaId}'
+            Restart=on-failure
+            RestartSec=10
+
+            [Install]
+            WantedBy=multi-user.target";
+
+            System.IO.File.WriteAllText($"/etc/systemd/system/{serviceName}", serviceContent);
+
+            ExecuteBashCommand($"systemctl start {serviceName}");
+            ExecuteBashCommand($"systemctl enable {serviceName}");
+
+            //var startInfo = new ProcessStartInfo
+            //{
+            //    FileName = "/bin/bash",
+            //    Arguments = $"-c \"nohup python3.8 /home/validacao/validar.py {campanhaId} > /home/validacao/nohup.out 2>&1 &\"",
+            //    RedirectStandardOutput = true,
+            //    UseShellExecute = false,
+            //    CreateNoWindow = true,
+            //};
+
+            //using var process = Process.Start(startInfo);
 
 
+        }
+        private void ExecuteBashCommand(string command)
+        {
             var startInfo = new ProcessStartInfo
             {
                 FileName = "/bin/bash",
-                Arguments = $"-c \"nohup python3.8 /home/validacao/validar.py {campanhaId} > /home/validacao/nohup.out 2>&1 &\"",
+                Arguments = $"-c \"{command}\"",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
             };
 
             using var process = Process.Start(startInfo);
-
-
+            process.WaitForExit();
+        }
+        private async Task ExecuteBashCommandAsync(string command)
+        {
+            using (var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{command}\"",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            })
+            {
+                process.Start();
+                await process.WaitForExitAsync();
+            }
         }
 
         //Cria uma nova campanha ao acionar o método NovaLinha e salva essa campanha
@@ -282,6 +333,13 @@ namespace IntegraMailing.Controllers
                 foreach (var campanha in campanhasParaFinalizar)
                 {
                     campanha.Status = "Finalizada";
+
+                    string serviceName = $"mailing-campanha{campanha.Id}.service";
+
+                    await ExecuteBashCommandAsync($"sudo systemctl stop {serviceName}");
+                    await ExecuteBashCommandAsync($"sudo systemctl disable {serviceName}");
+
+                    await ExecuteBashCommandAsync($"sudo rm /etc/systemd/system/{serviceName}");
                 }
                 await _context.SaveChangesAsync();
             }
@@ -297,6 +355,7 @@ namespace IntegraMailing.Controllers
             return View("~/Views/Home/Lista.cshtml", listaViewModel);
 
         }
+       
         [HttpPost]
         public IActionResult SetFileName(IFormFile file)
         {
