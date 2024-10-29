@@ -83,7 +83,7 @@ a[b-ksrqczyrcf] {
     position: absolute;
     width: 100vw;
     background-color: #2E659C;
-    color: white;
+    color: white !important;
     bottom: 0;
     display:flex;
     align-items:center;

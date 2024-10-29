@@ -32,7 +32,7 @@
 
                 #resultsTable tbody tr:hover {
                     background-color: #e2e8f0;
-                    cursor: pointer;
+                    
                     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada ao passar o mouse */
                 }
 
@@ -151,11 +151,26 @@
         @for (var i = indice - 6; i  < indice && i < Model.Campanhas.Count; i++)
         {
             var backgroundColor = i % 2 == 0 ? "background-color: #a0aec0;" : "background-color: white;";
-            <tr style="@backgroundColor" onclick="submitForm(@i)">
+
+            <tr style="@backgroundColor">
                 <td>
                     <form id="form-@i" method="post" asp-action="GetMailings" asp-controller="ResultadoCampanha">
                         <input type="hidden" name="campanhaId" value="@Model.Campanhas[i].Id" />
-                        <button type="submit" class="btn text-left" style="width:100%;">@Model.Campanhas[i].Name</button>
+                        <div style="display: flex;width:100%;align-items: center;flex-direction: column;gap: 10px;">
+                            <span>@Model.Campanhas[i].Name</span>
+                            <button style="
+                                width: 80px;
+                                height: 35px;
+                                color: white;
+                                display:flex;
+                                align-items: center;
+                                justify-content: center;
+                                border: 1px solid green;
+                                cursor: pointer;
+                                background-color: #32b132;" type="submit" class="btn text-left">
+                                Abrir
+                            </button>
+                        </div>
                     </form>
                 </td>
                 <td>@Model.Campanhas[i].Data_Sent.Value.ToString("dd/MM/yyyy")</td>
@@ -251,8 +266,5 @@
             });
         }
 
-        function submitForm(index) {
-            document.getElementById('form-' + index).submit();
-        }
     </script>
 }

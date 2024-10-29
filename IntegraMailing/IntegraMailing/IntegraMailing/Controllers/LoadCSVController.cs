@@ -213,7 +213,6 @@ namespace IntegraMailing.Controllers
 
             //using var process = Process.Start(startInfo);
 
-
         }
         private void ExecuteBashCommand(string command)
         {
